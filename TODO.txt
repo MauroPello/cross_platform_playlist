@@ -1,0 +1,11 @@
+TODO:
+    improve graphics & usability {
+        customize soundcloud panel, 
+        add volume slider,
+        add play, pause, stop, next and previous song buttons,
+        add navbar (Login Page, All Playlists, Current User, Current Song)
+    }
+    figure out to work with the spotify player
+    connect an sql lite database
+    import playlists from other platforms/local files (?) (needs API?)
+    search for songs and automatically get links (find link with name and platform || find name and platform with link) (needs API)

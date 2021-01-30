@@ -1,0 +1,40 @@
+body {
+    background-color: #272727!important;
+    color: white!important;
+}
+
+.row-style {
+    background-color: #9D1EE8!important;
+    margin: 5%!important;
+    color: white!important;
+}
+
+.filecontent {
+    white-space: pre-wrap!important;
+    margin-left: 10%!important;
+    margin-right: 10%!important;
+} 
+
+.videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+}
+
+.videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.button-div {
+    width: 100%;
+    text-align: center;
+}
+
+.center{
+    margin: auto;
+    display: inline-block;
+}
