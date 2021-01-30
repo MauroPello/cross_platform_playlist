@@ -42,7 +42,11 @@
     <div class="videoWrapper" style="display: none;" id='youtube_player-wrapper' >
         <iframe id='youtube_player' src="http://www.youtube.com/embed/<?php echo $first_youtube_song; ?>?html5=1&enablejsapi=1" frameborder="0"></iframe>
     </div>
-    <iframe style="display: none; margin: auto;" id='spotify_player' src="https://open.spotify.com/embed/track/<?php echo $first_spotify_song; ?>" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
-    <iframe style="display: none; margin: auto;" id='soundcloud_player' src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/596774202&color=%23ff5500&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true" width="100%" height="300" scrolling="no" frameborder="no"></iframe>
+    <div class="videoWrapper" style="display: none;" id='spotify_player-wrapper'>
+        <iframe id='spotify_player' src="https://open.spotify.com/embed/track/<?php echo $first_spotify_song; ?>" frameborder="0" allowtransparency="true"></iframe>
+    </div>
+    <div class="videoWrapper" style="display: none;" id='soundcloud_player-wrapper'>
+        <iframe id='soundcloud_player' src="https://w.soundcloud.com/player/?url=https://soundcloud.com/<?php echo $first_soundcloud_song; ?>" scrolling="no" frameborder="no"></iframe>
+    </div>
     <body>
 <?php } ?>

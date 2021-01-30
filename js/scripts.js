@@ -32,12 +32,12 @@ function next_song(platform, id){
             yt_player.playVideo();
         }
 
-        var iframe = document.getElementById('youtube_player-wrapper');
-        iframe.style.display = "block";
+        var yt_div = document.getElementById('youtube_player-wrapper');
+        yt_div.style.display = "block";
     }
     else if (platform == "sp"){
-        var iframe = document.getElementById('spotify_player');
-        iframe.style.display = "block";
+        var sp_div = document.getElementById('spotify_player-wrapper');
+        sp_div.style.display = "block";
         if (sp_player == null){
             // start spotify player
         }
@@ -45,9 +45,20 @@ function next_song(platform, id){
     }
     else if (platform == "sc"){
         var sc_options = [];
-        sc_options.show_artwork = true;
-        sc_options.liking = false;
         sc_options.auto_play = true;
+        sc_options.color = "#FF5500";
+        sc_options.buying = true;
+        sc_options.sharing = true;
+        sc_options.download = true;
+        sc_options.show_artwork = true;
+        sc_options.show_playcount = true;
+        sc_options.show_user = true;
+        sc_options.single_active = true;
+        sc_options.visual = true;
+        sc_options.hide_related = true;
+        sc_options.show_comments = true;
+        sc_options.show_reposts = true;
+        sc_options.show_teaser = true;
         
         if (sc_player == null){
             SC.initialize({
@@ -69,8 +80,8 @@ function next_song(platform, id){
             sc_player.load("https://soundcloud.com/" + id, sc_options);
         }
         
-        var iframe = document.getElementById('soundcloud_player');
-        iframe.style.display = "block";
+        var sc_div = document.getElementById('soundcloud_player-wrapper');
+        sc_div.style.display = "block";
     }
 
     count += 1;
@@ -78,12 +89,12 @@ function next_song(platform, id){
 }
 
 function hide_all_players(){
-    div = document.getElementById('youtube_player-wrapper');
-    div.style.display = "none";
-    iframe = document.getElementById('spotify_player');
-    iframe.style.display = "none";
-    iframe = document.getElementById('soundcloud_player');
-    iframe.style.display = "none";
+    var yt_div = document.getElementById('youtube_player-wrapper');
+    yt_div.style.display = "none";
+    var sp_div = document.getElementById('spotify_player-wrapper');
+    sp_div.style.display = "none";
+    var sc_div = document.getElementById('soundcloud_player-wrapper');
+    sc_div.style.display = "none";
 }
 
 function onPlayerReady(){

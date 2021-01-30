@@ -1,6 +1,5 @@
 TODO:
     improve graphics & usability {
-        customize soundcloud panel, 
         add volume slider,
         add play, pause, stop, next and previous song buttons,
         add navbar (Login Page, All Playlists, Current User, Current Song)
