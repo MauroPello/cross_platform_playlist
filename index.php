@@ -123,7 +123,7 @@
                 $url = explode("?", $url)[0];
             }
 
-            if (checkSong($directory . $filename, $song)){
+            if (checkSong($directory . $filename, $song) >= 0){
                 alert($song . " already exists!");
             }
             else{
@@ -136,7 +136,7 @@
         else if ($_POST["button"] == "Delete_Song"){
             $song = $_POST["song"];
 
-            if (checkSong($directory . $filename, $song)){
+            if (checkSong($directory . $filename, $song) >= 0){
                 delete_song($directory . $filename, $song);
             }
             else{
@@ -147,8 +147,10 @@
             display_songs($directory . $filename, "Playlist: " . $filename);
         }
         else if ($_POST["button"] == "Play"){
+            $start_index = checkSong($directory . $filename, $_POST["song"]);
+            if ($start_index == -1){$start_index = 0;}
             view_playlist($current_user, $filename);
-            play_playlist($directory . $filename, 2);
+            play_playlist($directory . $filename, $start_index);
             display_songs($directory . $filename, "Playlist: " . $filename);
         }
         else if ($_POST["button"] == "Play_Random"){

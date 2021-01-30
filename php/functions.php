@@ -34,13 +34,13 @@ function checkSong($filename, $songname){
     array_pop($songs);
     fclose($fs);
 
-    foreach($songs as $song){
-        $tmp = explode("*|*", $song);
+    for($i = 0; $i < count($songs); $i++){
+        $tmp = explode("*|*", $songs[$i]);
         if ($tmp[0] == $songname){
-            return TRUE;
+            return $i;
         } 
     }
-    return FALSE;
+    return -1;
 }
 
 function alert($msg){
