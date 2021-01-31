@@ -1,7 +1,4 @@
 TODO:
-    improve graphics & usability {
-        add Song List somwehere (maybe on a sidebar?),
-        add current cong and media control buttons
-    }
-    figure out to work with the spotify player
+    media buttons
     connect an sql lite database
+    figure out to work with the spotify player

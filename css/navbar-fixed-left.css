@@ -1,0 +1,31 @@
+.navbar.fixed-left {
+  bottom: 0;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 20%;
+  z-index: 1030;
+  right: auto;
+}
+
+.navbar.fixed-left .navbar-collapse {
+  flex-grow: 0;
+  flex-direction: column;
+  right: 0;
+  left: 0;
+  margin: 2%;
+}
+.navbar.fixed-left .navbar-collapse .navbar-nav {
+  flex-direction: column;
+}
+.navbar.fixed-left .navbar-collapse .navbar-nav .nav-item {
+  width: 100%;
+}
+
+.navbar.fixed-left .navbar-brand {
+  margin-left: auto;
+  margin-right: auto;
+}

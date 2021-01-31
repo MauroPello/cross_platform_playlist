@@ -43,11 +43,20 @@ function checkSong($filename, $song_id){
 }
 
 function alert($msg){
-    echo '<script type="text/javascript">alert("' . $msg . '");</script>';
+    echo '<div class="alert alert-danger alert-dismissible" style="z-index: 10000; margin-top: 1%; margin-left: 10%; margin-right: 10%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' . $msg . '</div>';
 } 
 
 function open_link($url){
     echo '<script type="text/javascript">window.open("' . $url . '","_self");</script>';
+}
+
+function get_songs($filename){
+    $fs = fopen($filename, "r") or die("Failed to open file");
+    $songs = explode("\n", stream_get_contents($fs));
+    array_pop($songs);
+    fclose($fs);
+
+    return $songs;
 }
 
 function get_playlists($user_directory){
@@ -55,7 +64,46 @@ function get_playlists($user_directory){
 }
 
 function get_songname($url){
-    return $url;
+    $name = "";
+    if (get_platform($url) == "yt"){
+        $request_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" . get_id($url) . "&key=AIzaSyBaZ6kbZDxm2XQo7w10qXj_51qVAqGDLGQ";
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $request_url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+    
+        curl_close($ch);
+        $data = json_decode($response);
+        $value = json_decode(json_encode($data), true);
+        $name = $value['items'][0]['snippet']['title'];
+    }
+    else if (get_platform($url) == "sp"){
+
+    }
+    else if (get_platform($url) == "sc"){
+        $request_url = "https://api-widget.soundcloud.com/resolve?url=https://soundcloud.com/" . get_id($url) . "&format=json&client_id=TaTmd2ARXgnp20a7BQJwuZ8xGFbrYgz5";
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $request_url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+    
+        curl_close($ch);
+        $data = json_decode($response);
+        $value = json_decode(json_encode($data), true);
+        $name = $value['title'];
+    }
+
+    return $name;
 }
 
 function get_platform($url){
@@ -92,27 +140,20 @@ function get_id($url){
     return $url;
 }
 
-function display_songs($filename){
-    $fs = fopen($filename, "r") or die("Failed to open file");
-    $songs = explode("\n", stream_get_contents($fs));
-    array_pop($songs);
-    fclose($fs);
- 
-    $contents = "";
-    foreach($songs as $song){
-        $tmp = explode("*|*", $song);
-        if ($tmp[2] == "yt"){
-            $contents  = $contents . '<a href="https://youtu.be/' . $tmp[1] . '" target="_blank">' . $tmp[0] . '</a><br>';
-        }
-        else if ($tmp[2] == "sp"){
-            $contents  = $contents . '<a href="https://open.spotify.com/track/' . $tmp[1] . '" target="_blank">' . $tmp[0] . '</a><br>';
-        }
-        else if ($tmp[2] == "sc"){
-            $contents  = $contents . '<a href="https://soundcloud.com/' . $tmp[1] . '" target="_blank">' . $tmp[0] . '</a><br>';
-        }
+function get_url($id, $platform){
+    $url = "";
+
+    if ($platform == "yt"){
+        $url = "https://youtu.be/" . $id;
+    }
+    else if ($platform == "sp"){
+        $url = "https://open.spotify.com/track/" . $id;
+    }
+    else if ($platform == "sc"){
+        $url = "https://soundcloud.com/" . $id;
     }
 
-    echo '<br><p class="filecontent">' . $contents . '</p>';
+    return $url;
 }
 
 function append_to_file($filename, $text){

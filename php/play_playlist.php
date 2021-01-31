@@ -39,7 +39,8 @@
     }
     ?>
     <body onload='start_playlist(<?php echo json_encode($platforms); ?>, <?php echo json_encode($ids); ?>)'>
-    <div class="container">
+    <div class="custom-container">
+    <div class="custom-wrapper">
     <div class="videoWrapper" style="display: none;" id='youtube_player-wrapper' >
         <iframe id='youtube_player' src="http://www.youtube.com/embed/<?php echo $first_youtube_song; ?>?html5=1&enablejsapi=1" frameborder="0"></iframe>
     </div>
@@ -48,6 +49,7 @@
     </div>
     <div class="videoWrapper" style="display: none;" id='soundcloud_player-wrapper'>
         <iframe id='soundcloud_player' src="https://w.soundcloud.com/player/?url=https://soundcloud.com/<?php echo $first_soundcloud_song; ?>" scrolling="no" frameborder="no"></iframe>
+    </div>
     </div>
     </div>
     <body>

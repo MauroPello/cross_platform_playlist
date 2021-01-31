@@ -1,8 +1,9 @@
 <?php 
 require "php/functions.php";
 require "php/login_form.php";
-require "php/home_page.php";
+require "php/sidebar.php";
 require "php/play_playlist.php";
+require "php/view_playlist.php";
 ?>
 
 <!DOCTYPE html>
@@ -12,9 +13,10 @@ require "php/play_playlist.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <link href="css/signin.css" rel="stylesheet" type="text/css">
+    <link href="css/navbar-fixed-left.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
-    <link rel="icon" href="/docs/4.1/assets/img/favicons/favicon.ico">
+    <link rel="icon" href="logo.ico">
     <title>All Around Playlists</title>
 </head>
 
@@ -36,27 +38,25 @@ if ($current_user == "") {
             if (checkUsername($accounts, $_POST["username"])) {
                 if (checkPassword($accounts, $_POST["username"], $_POST["password"])) {
                     $current_user = $_POST["username"];
-                    alert($current_user . " logged in successfully!");
                 }
                 else {
                     alert("Wrong Password!");
-                    open_link("http://localhost:8080");
+                    login_form();
                 }
             }
             else {
                 alert($_POST["username"] . " doesn't exist!");
-                open_link("http://localhost:8080");
+                login_form();
             }
         }
         else if ($_POST['button'] == "Register"){
             if (checkUsername($accounts, $_POST["username"])) {
                 alert($_POST["username"] . " already exists!");
-                open_link("http://localhost:8080");
+                login_form();
             }
             else {
                 $current_user = $_POST["username"];
                 fwrite($fs, "$current_user*|*" . password_hash($_POST["password"], PASSWORD_DEFAULT) . "\n");
-                alert($current_user . " successfully registered!");
             }
         }
         fclose($fs);
@@ -68,17 +68,18 @@ if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["butt
     $current_user = $_POST["username"];
     $user_directory = "data/$current_user/";
     $playlist = $_POST["playlist"];
-
+    if (str_contains($_POST["button"], "View_Playlist")){
+        $playlist = explode("*|*", $_POST["button"])[1];
+    }
 
     if ($_POST["button"] == "Create_Playlist"){
         if (checkFile($user_directory, $playlist)){
-            alert($playlist . " already exists!");
+            alert($playlist . ' already exists!');
         }
         else{
             create_file($user_directory . $playlist);
         }
-
-        homepage($current_user, $playlist);
+        view_playlist($current_user, $playlist);
     }
     else if ($_POST["button"] == "Delete_Playlist"){
         if (checkFile($user_directory, $playlist)){
@@ -87,14 +88,10 @@ if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["butt
         else{
             alert($playlist . " doesn't exist!");
         }
-
-        homepage($current_user, $playlist);
     }
-    else if ($_POST["button"] == "View_Playlist"){
-        homepage($current_user, $playlist);
-        
+    else if (str_contains($_POST["button"], "View_Playlist")){
         if (checkFile($user_directory, $playlist)){
-            display_songs($user_directory . $playlist);
+            view_playlist($current_user, $playlist);
         }
         else{
             alert($playlist . " doesn't exist!");
@@ -112,8 +109,7 @@ if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["butt
             append_to_file($user_directory . $playlist, $song . "*|*" . $id . "*|*" . $platform);
         }
 
-        homepage($current_user, $playlist);
-        display_songs($user_directory . $playlist);
+        view_playlist($current_user, $playlist);
     }
     else if ($_POST["button"] == "Delete_Song"){
         $id = get_id($_POST["url"]);
@@ -125,28 +121,23 @@ if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["butt
             alert($song . " doesn't exist!");
         }
 
-        homepage($current_user, $playlist);
-        display_songs($user_directory . $playlist);
+        view_playlist($current_user, $playlist);
     }
-    else if ($_POST["button"] == "Play"){
-        $start_index = checkSong($user_directory . $playlist, get_id($_POST["url"]));
-        if ($start_index == -1){$start_index = 0;}
+    else if (str_contains($_POST["button"], "Play_Song")){
+        $start_index = checkSong($user_directory . $playlist, explode("*|*", $_POST["button"])[1]);
 
-        homepage($current_user, $playlist);
         play_playlist($user_directory . $playlist, $start_index);
-        display_songs($user_directory . $playlist);
+        view_playlist($current_user, $playlist);
     }
     else if ($_POST["button"] == "Play_Random"){
-        homepage($current_user, $playlist);
         play_playlist($user_directory . $playlist, -1);
-        display_songs($user_directory . $playlist);
+        view_playlist($current_user, $playlist);
     }
-    else{
-        homepage($current_user, $playlist);
-    }
+
+    sidebar($current_user, $playlist);
 }
 else if ($current_user !== "" && !isset($_POST["playlist"])) { 
-    homepage($current_user, "");
+    sidebar($current_user, "");
 } ?>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
