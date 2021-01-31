@@ -11,15 +11,15 @@
         <table class="table table-sm table-hover table-dark" style="text-align: left; background-color: #272727;">
             <thead>
                 <tr>
-                <th scope="col"><a style="font-weight: bold;">Name (click any to start playing)</a></th>
-                <th scope="col"><a style="font-weight: bold;">Direct Link</a></th>
+                <th scope="col"><b>Name (click any to start playing)</b></th>
+                <th scope="col"><b>Direct Link</b></th>
                 </tr>
             </thead>
             <tbody>
                 <?php 
                     foreach($songs as $song){
                         $tmp = explode("*|*", $song);
-                        echo '<tr><th scope="row"><button type="submit" name="button" value="Play_Song*|*' . $tmp[1] . '" class="btn btn-link" style="margin: 0;padding: 0;">' . $tmp[0] . '</button><td><a href="' . get_url($tmp[1], $tmp[2]) . '" target="_blank">' . get_url($tmp[1], $tmp[2]) . '</a></td></th></tr>';
+                        echo '<tr><th scope="row"><button type="submit" name="button" value="Play_Song*|*' . $tmp[1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $tmp[0] . '</button><td><a href="' . get_url($tmp[1], $tmp[2]) . '" target="_blank">' . get_url($tmp[1], $tmp[2]) . '</a></td></th></tr>';
                     }
                 ?>
             </tbody>

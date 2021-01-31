@@ -2,3 +2,4 @@ TODO:
     media buttons
     connect an sql lite database
     figure out to work with the spotify player
+    upload .csv of urls
