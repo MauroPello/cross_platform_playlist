@@ -28,15 +28,14 @@ function checkFile ($directory, $filename){
     return FALSE;
 }
 
-function checkSong($filename, $songname){
+function checkSong($filename, $song_id){
     $fs = fopen($filename, "r") or die("Failed to open file");
     $songs = explode("\n", stream_get_contents($fs));
     array_pop($songs);
     fclose($fs);
 
     for($i = 0; $i < count($songs); $i++){
-        $tmp = explode("*|*", $songs[$i]);
-        if ($tmp[0] == $songname){
+        if (explode("*|*", $songs[$i])[1] == $song_id){
             return $i;
         } 
     }
@@ -47,12 +46,53 @@ function alert($msg){
     echo '<script type="text/javascript">alert("' . $msg . '");</script>';
 } 
 
-function display_filenames($path){
-    echo '<h4 style="text-align: center;">All the Playlists</h4>';
-    echo '<p class="filecontent">' . implode("\n", array_diff(scandir($path), array(".", ".."))) . '</p>';
+function open_link($url){
+    echo '<script type="text/javascript">window.open("' . $url . '","_self");</script>';
 }
 
-function display_songs($filename, $header){
+function get_playlists($user_directory){
+    return array_diff(scandir($user_directory), array(".", ".."));
+}
+
+function get_songname($url){
+    return $url;
+}
+
+function get_platform($url){
+    if (str_contains($url, "https://www.youtube.com/watch?v=") || str_contains($url, "https://youtu.be/")){
+        return "yt";
+    }
+    else if (str_contains($url, "https://open.spotify.com/embed/track/") || str_contains($url, "https://open.spotify.com/embed/track/") || str_contains($url, "spotify:track:")){
+        return "sp";
+    }
+    else if (str_contains($url, "https://soundcloud.com/")){
+        return "sc";
+    }
+}
+
+function get_id($url){
+    $platform = get_platform($url);
+
+    if ($platform == "yt"){
+        $url = str_replace("https://www.youtube.com/watch?v=", '', $url);
+        $url = str_replace("https://youtu.be/", '', $url);
+        $url = explode("&", $url)[0];
+    }
+    else if ($platform == "sp"){
+        $url = str_replace("https://open.spotify.com/embed/track/", '', $url);
+        $url = str_replace("https://open.spotify.com/track/", '', $url);
+        $url = str_replace("spotify:track:", '', $url);
+        $url = explode("?", $url)[0];
+    }
+    else if ($platform == "sc"){
+        $url = str_replace("https://soundcloud.com/", '', $url);
+        $url = explode("?", $url)[0];
+    }
+
+    return $url;
+}
+
+function display_songs($filename){
     $fs = fopen($filename, "r") or die("Failed to open file");
     $songs = explode("\n", stream_get_contents($fs));
     array_pop($songs);
@@ -72,22 +112,21 @@ function display_songs($filename, $header){
         }
     }
 
-    echo '<br><h4 style="text-align: center;">' . $header . '</h4>';
-    echo '<p class="filecontent">' . $contents . '</p>';
+    echo '<br><p class="filecontent">' . $contents . '</p>';
 }
 
 function append_to_file($filename, $text){
     file_put_contents($filename, $text . "\n", FILE_APPEND);
 } 
 
-function delete_song($filename, $songname){
+function delete_song($filename, $song_id){
     $fs = fopen($filename, "r") or die("Failed to open file");
     $songs = explode("\n", stream_get_contents($fs));
     fclose($fs);
 
     $to_write = "";
     foreach($songs as $song){
-        if (explode("*|*", $song)[0] != $songname && $song != ""){
+        if ($song != "" && explode("*|*", $song)[1] !== $song_id){
             $to_write = $to_write . $song . "\n";
         } 
     }

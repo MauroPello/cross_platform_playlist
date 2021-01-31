@@ -1,3 +1,10 @@
+<?php 
+require "php/functions.php";
+require "php/login_form.php";
+require "php/home_page.php";
+require "php/play_playlist.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,19 +15,30 @@
     <title>All Around Playlists</title>
 </head>
 <body>
-<br>
-<h2 style="text-align: center"><a class="label label-default" href="./">Login Page</a></h2>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="./">All Around Playlist</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item <?php if ($_SERVER["REQUEST_METHOD"] == "GET"){ echo 'active';} ?>">
+        <a class="nav-link" href="./">Log In<?php if ($_SERVER["REQUEST_METHOD"] == "GET"){ echo '<span class="sr-only">(current)</span>';} ?></a>
+      </li>
+      <li class="nav-item <?php if (isset($_POST["username"])){ echo 'active';} ?>">
+        <a class="nav-link" href="#">Playlists</a>
+      </li>
+    </ul>
+    <span class="nav-item nav-link">
+        <?php if (isset($_POST["username"])){ echo "Current User: " . $_POST["username"]; }?>
+    </span>
+  </div>
+</nav>
 
 <div class="container">
     <?php 
-
-    require "php/functions.php";
-    require "php/login_form.php";
-    require "php/home_page.php";
-    require "php/playlist_view.php";
-    require "php/play_playlist.php";
-
-    $current_user = "";
+    $current_user = ""; 
 
     if ($current_user == "") {
         if ($_SERVER["REQUEST_METHOD"] == "GET"){
@@ -36,137 +54,120 @@
                 if (checkUsername($accounts, $_POST["username"])) {
                     if (checkPassword($accounts, $_POST["username"], $_POST["password"])) {
                         $current_user = $_POST["username"];
-                        $msg = $current_user . " logged in successfully!";
+                        alert($current_user . " logged in successfully!");
                     }
                     else {
-                        $msg =  "Wrong Password!";
-                        login_form();
+                        alert("Wrong Password!");
+                        open_link("http://localhost:8080");
                     }
                 }
                 else {
-                    $msg =  $_POST["username"] . " doesn't exist!";
-                    login_form();
+                    alert($_POST["username"] . " doesn't exist!");
+                    open_link("http://localhost:8080");
                 }
             }
             else if ($_POST['button'] == "Register"){
                 if (checkUsername($accounts, $_POST["username"])) {
-                    $msg =  $_POST["username"] . " already exists!";
-                    login_form();
+                    alert($_POST["username"] . " already exists!");
+                    open_link("http://localhost:8080");
                 }
                 else {
                     $current_user = $_POST["username"];
                     fwrite($fs, "$current_user*|*" . password_hash($_POST["password"], PASSWORD_DEFAULT) . "\n");
-                    $msg =  $current_user . " successfully registered!";
+                    alert($current_user . " successfully registered!");
                 }
             }
             fclose($fs);
-            alert($msg);
         }
     }
 
 
     if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["button"])) {
         $current_user = $_POST["username"];
-        $directory = "data/$current_user/";
-        $filename = $_POST["playlist"];
+        $user_directory = "data/$current_user/";
+        $playlist = $_POST["playlist"];
+
 
         if ($_POST["button"] == "Create_Playlist"){
-            if (checkFile($directory, $filename)){
-                alert($filename . " already exists!");
+            if (checkFile($user_directory, $playlist)){
+                alert($playlist . " already exists!");
             }
             else{
-                create_file($directory . $filename);
+                create_file($user_directory . $playlist);
             }
-
-            homepage($current_user);
-            display_filenames($directory);
+    
+            homepage($current_user, $playlist);
         }
         else if ($_POST["button"] == "Delete_Playlist"){
-            if (checkFile($directory, $filename)){
-                delete_file($directory . $filename);
+            if (checkFile($user_directory, $playlist)){
+                delete_file($user_directory . $playlist);
             }
             else{
-                alert($filename . " doesn't exist!");
+                alert($playlist . " doesn't exist!");
             }
 
-            homepage($current_user);
-            display_filenames($directory);
+            homepage($current_user, $playlist);
         }
         else if ($_POST["button"] == "View_Playlist"){
-            if (checkFile($directory, $filename)){
-                view_playlist($current_user, $filename);
-                display_songs($directory . $filename, "Playlist: " . $filename);
+            homepage($current_user, $playlist);
+            
+            if (checkFile($user_directory, $playlist)){
+                display_songs($user_directory . $playlist);
             }
             else{
-                alert($filename . " doesn't exist!");
-                homepage($current_user);
-                display_filenames($directory);
+                alert($playlist . " doesn't exist!");
             }
         }
         else if ($_POST["button"] == "Add_Song"){
-            $song = $_POST["song"];
-            $platform = $_POST["platform"];
+            $song = get_songname($_POST["url"]);
+            $platform = get_platform($_POST["url"]);
+            $id = get_id($_POST["url"]);
 
-            if ($platform == "yt"){
-                $url = str_replace("https://www.youtube.com/watch?v=", '', $_POST["url"]);
-                $url = str_replace("https://youtu.be/", '', $url);
-                $url = explode("&", $url)[0];
-            }
-            else if ($platform == "sp"){
-                $url = str_replace("https://open.spotify.com/embed/track/", '', $_POST["url"]);
-                $url = str_replace("https://open.spotify.com/track/", '', $url);
-                $url = str_replace("spotify:track:", '', $url);
-                $url = explode("?", $url)[0];
-            }
-            else if ($platform == "sc"){
-                $url = str_replace("https://soundcloud.com/", '', $_POST["url"]);
-                $url = explode("?", $url)[0];
-            }
-
-            if (checkSong($directory . $filename, $song) >= 0){
+            if (checkSong($user_directory . $playlist, $song) >= 0){
                 alert($song . " already exists!");
             }
             else{
-                append_to_file($directory . $filename, $song . "*|*" . $url . "*|*" . $platform);
+                append_to_file($user_directory . $playlist, $song . "*|*" . $id . "*|*" . $platform);
             }
 
-            view_playlist($current_user, $filename);
-            display_songs($directory . $filename, "Playlist: " . $filename);
+            homepage($current_user, $playlist);
+            display_songs($user_directory . $playlist);
         }
         else if ($_POST["button"] == "Delete_Song"){
-            $song = $_POST["song"];
+            $id = get_id($_POST["url"]);
 
-            if (checkSong($directory . $filename, $song) >= 0){
-                delete_song($directory . $filename, $song);
+            if (checkSong($user_directory . $playlist, $id) >= 0){
+                delete_song($user_directory . $playlist, $id);
             }
             else{
                 alert($song . " doesn't exist!");
             }
 
-            view_playlist($current_user, $filename);
-            display_songs($directory . $filename, "Playlist: " . $filename);
+            homepage($current_user, $playlist);
+            display_songs($user_directory . $playlist);
         }
         else if ($_POST["button"] == "Play"){
-            $start_index = checkSong($directory . $filename, $_POST["song"]);
+            $start_index = checkSong($user_directory . $playlist, get_id($_POST["url"]));
             if ($start_index == -1){$start_index = 0;}
-            view_playlist($current_user, $filename);
-            play_playlist($directory . $filename, $start_index);
-            display_songs($directory . $filename, "Playlist: " . $filename);
+
+            homepage($current_user, $playlist);
+            play_playlist($user_directory . $playlist, $start_index);
+            display_songs($user_directory . $playlist);
         }
         else if ($_POST["button"] == "Play_Random"){
-            view_playlist($current_user, $filename);
-            play_playlist($directory . $filename, -1);
-            display_songs($directory . $filename, "Playlist: " . $filename);
+            homepage($current_user, $playlist);
+            play_playlist($user_directory . $playlist, -1);
+            display_songs($user_directory . $playlist);
         }
         else{
-            homepage($current_user);
-            display_filenames($directory);
+            homepage($current_user, $playlist);
         }
     }
     else if ($current_user !== "" && !isset($_POST["playlist"])) { 
-        homepage($current_user);
-
-        display_filenames("data/$current_user/");
+        homepage($current_user, "");
+    }
+    else {
+        open_link("http://localhost:8080");
     } ?>
 </div>
 

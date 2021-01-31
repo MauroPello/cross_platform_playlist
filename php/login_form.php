@@ -1,5 +1,7 @@
 <?php function login_form () {?>
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" style="margin: 10%">
+    <br><br>
+    <h3 style="text-align: center"><p class="label label-default">Log in with your Credentials</p></h3>
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" style="margin: 5%">
     
         <div class="form-group">
             <div class="input-group mb-3">

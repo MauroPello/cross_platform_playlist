@@ -5,7 +5,6 @@ body {
 
 .row-style {
     background-color: #9D1EE8!important;
-    margin: 5%!important;
     color: white!important;
 }
 
@@ -19,6 +18,7 @@ body {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 */
     height: 0;
+    margin: 2%;
 }
 
 .videoWrapper iframe {
