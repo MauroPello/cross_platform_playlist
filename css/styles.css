@@ -1,6 +1,8 @@
 body {
     background-color: #272727!important;
     color: white!important;
+    display: block!important;
+    padding-top: 0%!important;
 }
 
 .row-style {
@@ -34,7 +36,11 @@ body {
     text-align: center;
 }
 
-.center{
-    margin: auto;
-    display: inline-block;
+.center-div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
 }

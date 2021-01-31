@@ -1,29 +1,18 @@
 <?php function login_form () {?>
-    <br><br>
-    <h3 style="text-align: center"><p class="label label-default">Log in with your Credentials</p></h3>
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" style="margin: 5%">
-    
-        <div class="form-group">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Username</span>
-                </div>
-                <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="inputGroup-sizing-default">
-            </div>
-        </div>
-            
-        <div class="form-group">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Password</span>
-                </div>
-                <input type="password" name="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="inputGroup-sizing-default">
-            </div>
-        </div>
+<div class="container center-div">
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" class="form-signin"> 
+        <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign In</h1>
 
-        <div class="button-div">
-            <button type="submit" name="button" value="Login" class="btn btn-primary center">Log In</button>
-            <button type="submit" name="button" value="Register" class="btn btn-primary center">Register</button>
-        </div>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="username" id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
+
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+
+        <button type="submit" name="button" value="Login" class="btn btn-lg btn-primary btn-block">Sign In</button>
+        <button type="submit" name="button" value="Register" class="btn btn-lg btn-primary btn-block">Register</button>
+        <p class="mt-5 mb-3 text-muted text-center">&copy; 2021-2022</p>
     </form>
+</div>
 <?php } ?>

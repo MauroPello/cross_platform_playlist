@@ -1,7 +1,28 @@
 <?php function homepage ($username, $playlist) {
     $playlists = get_playlists("data/$username/");
     ?>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="./">All Around Playlist</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item <?php if ($_SERVER["REQUEST_METHOD"] == "GET"){ echo 'active';} ?>">
+            <a class="nav-link" href="./">Log In<?php if ($_SERVER["REQUEST_METHOD"] == "GET"){ echo '<span class="sr-only">(current)</span>';} ?></a>
+        </li>
+        <li class="nav-item <?php if (isset($_POST["username"])){ echo 'active';} ?>">
+            <a class="nav-link" href="#">Playlists</a>
+        </li>
+        </ul>
+        <span class="nav-item nav-link">
+            <?php if (isset($_POST["username"])){ echo "Current User: " . $_POST["username"]; }?>
+        </span>
+    </div>
+    </nav>
     <br>
+    <div class="container">
     <h3 style="text-align: center"><p class="label label-default">Pick a Playlist</p></h3>
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
         <input style="display: none;" type="text" name="username" value="<?php echo $username; ?>" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="inputGroup-sizing-default" readonly>
@@ -22,9 +43,9 @@
             </div>
         
             <div class="button-div">
-                <button type="submit" name="button" value="View_Playlist" class="btn btn-primary center">View Playlist</button>
-                <button type="submit" name="button" value="Create_Playlist" class="btn btn-primary center">Create Playlist</button>
-                <button type="submit" name="button" value="Delete_Playlist" class="btn btn-primary center">Delete Playlist</button>
+                <button type="submit" name="button" value="View_Playlist" class="btn btn-primary">View Playlist</button>
+                <button type="submit" name="button" value="Create_Playlist" class="btn btn-primary">Create Playlist</button>
+                <button type="submit" name="button" value="Delete_Playlist" class="btn btn-primary">Delete Playlist</button>
             </div>
         </div>
         
@@ -47,4 +68,5 @@
             </div>
         </div>
     </form>
+    </div>
 <?php } ?>
