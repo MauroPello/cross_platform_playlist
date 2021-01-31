@@ -1,5 +1,6 @@
 TODO:
-    media buttons
+    media buttons (random play, stop, next, previous)
     connect an sql lite database
-    figure out to work with the spotify player
+    switch order
     upload .csv of urls
+    figure out to work with the spotify player
