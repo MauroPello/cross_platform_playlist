@@ -12,6 +12,9 @@ function start_playlist(platforms, ids){
 
 function next_song(platform, id){
     hide_all_players();
+
+    var div = document.getElementById('video-player-wrapper');
+    div.style.display = "block";
     
     if (platform == "yt"){
         if (yt_player == null){
@@ -32,11 +35,11 @@ function next_song(platform, id){
             yt_player.playVideo();
         }
 
-        var yt_div = document.getElementById('youtube_player-wrapper');
+        var yt_div = document.getElementById('youtube_player');
         yt_div.style.display = "block";
     }
     else if (platform == "sp"){
-        var sp_div = document.getElementById('spotify_player-wrapper');
+        var sp_div = document.getElementById('spotify_player');
         sp_div.style.display = "block";
         if (sp_player == null){
             // start spotify player
@@ -62,7 +65,7 @@ function next_song(platform, id){
         
         if (sc_player == null){
             SC.initialize({
-                client_id: 'YOUR_CLIENT_ID'
+                client_id: 'TaTmd2ARXgnp20a7BQJwuZ8xGFbrYgz5'
             });
 
             sc_player = SC.Widget('soundcloud_player');
@@ -80,7 +83,7 @@ function next_song(platform, id){
             sc_player.load("https://soundcloud.com/" + id, sc_options);
         }
         
-        var sc_div = document.getElementById('soundcloud_player-wrapper');
+        var sc_div = document.getElementById('soundcloud_player');
         sc_div.style.display = "block";
     }
 
@@ -89,14 +92,41 @@ function next_song(platform, id){
 }
 
 function hide_all_players(){
-    var yt_div = document.getElementById('youtube_player-wrapper');
+    var div = document.getElementById('video-player-wrapper');
+    div.style.display = "none";
+    var yt_div = document.getElementById('youtube_player');
     yt_div.style.display = "none";
-    var sp_div = document.getElementById('spotify_player-wrapper');
+    var sp_div = document.getElementById('spotify_player');
     sp_div.style.display = "none";
-    var sc_div = document.getElementById('soundcloud_player-wrapper');
+    var sc_div = document.getElementById('soundcloud_player');
     sc_div.style.display = "none";
 }
 
 function onPlayerReady(){
     yt_player.playVideo();
+}
+
+function stop(){
+    hide_all_players();
+    count = 0;
+
+    if (songs.platforms[count] == "yt"){
+        yt_player.stopVideo();
+    }
+    else if (songs.platforms[count] == "sp"){
+
+    }
+    else if (songs.platforms[count] == "sc"){
+        sc_player.pause();
+    }
+}
+
+function previous(){
+    count -= 2
+    if (count < 0){ count += songs.ids.length; }
+    next_song(songs.platforms[count], songs.ids[count]);
+}
+
+function next(){
+    next_song(songs.platforms[count], songs.ids[count]);
 }

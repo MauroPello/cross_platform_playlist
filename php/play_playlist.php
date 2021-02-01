@@ -41,14 +41,17 @@
     <body onload='start_playlist(<?php echo json_encode($platforms); ?>, <?php echo json_encode($ids); ?>)'>
     <div class="custom-container">
     <div class="custom-wrapper">
-    <div class="videoWrapper" style="display: none;" id='youtube_player-wrapper' >
+    <div class="videoWrapper" style="display: none;" id='video-player-wrapper'>
         <iframe id='youtube_player' src="http://www.youtube.com/embed/<?php echo $first_youtube_song; ?>?html5=1&enablejsapi=1" frameborder="0"></iframe>
-    </div>
-    <div class="videoWrapper" style="display: none;" id='spotify_player-wrapper'>
         <iframe id='spotify_player' src="https://open.spotify.com/embed/track/<?php echo $first_spotify_song; ?>" frameborder="0" allowtransparency="true"></iframe>
-    </div>
-    <div class="videoWrapper" style="display: none;" id='soundcloud_player-wrapper'>
         <iframe id='soundcloud_player' src="https://w.soundcloud.com/player/?url=https://soundcloud.com/<?php echo $first_soundcloud_song; ?>" scrolling="no" frameborder="no"></iframe>
+        <table class="table table-sm table-borderless table-dark" style="text-align: left; background-color: #272727; border-bottom: 0px solid!important; width: min-content!important; margin-left: 101%!important; margin-right: 5%!important">
+            <tbody>
+                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" onclick="previous()" style="padding: .2rem .3rem!important;"><img src="img/previous.svg"></button></td></tr>
+                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" onclick="stop()" style="padding: .2rem .3rem!important;"><img src="img/stop.svg"></button></td></tr>
+                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" onclick="next()" style="padding: .2rem .3rem!important;"><img src="img/next.svg"></button></td></tr>
+            </tbody>
+        </table>
     </div>
     </div>
     </div>

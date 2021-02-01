@@ -1,7 +1,7 @@
 <?php function login_form () {?>
 <div class="container center-div">
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" class="form-signin"> 
-        <img class="mb-4" src="logo.png" alt="" width="192" height="192">
+        <img class="mb-4" src="img/logo.png" alt="" width="192" height="192">
         <h1 class="h3 mb-3 font-weight-normal">Please sign In</h1>
 
         <label for="inputUsername" class="sr-only">Username</label>

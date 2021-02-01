@@ -10,6 +10,7 @@ body {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 */
     height: 0;
+    width: 94%;
 }
 
 .videoWrapper iframe {
@@ -59,4 +60,14 @@ body {
 
 .custom-container {
     margin-left: 20%!important;
+}
+
+.btn-img {
+    display: block!important;
+    width: 5vw;
+    height: 5vw;
+}
+
+.btn-img img{
+    float: left;
 }

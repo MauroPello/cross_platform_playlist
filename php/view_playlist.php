@@ -20,7 +20,7 @@
                 <?php 
                     for($i = 0; $i < count($songs); $i++){
                         $tmp = explode("*|*", $songs[$i]);
-                        echo '<tr><td>' . $i . '</td><td><button type="submit" name="button" value="Play_Song*|*' . $tmp[1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $tmp[0] . '</button></td><td><a href="' . get_url($tmp[1], $tmp[2]) . '" target="_blank">' . get_url($tmp[1], $tmp[2]) . '</a></td></tr>';
+                        echo '<tr><td>' . ($i + 1) . '</td><td><button type="submit" name="button" value="Play_Song*|*' . $tmp[1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $tmp[0] . '</button></td><td><a href="' . get_url($tmp[1], $tmp[2]) . '" target="_blank">' . get_url($tmp[1], $tmp[2]) . '</a></td></tr>';
                     }
                 ?>
             </tbody>
