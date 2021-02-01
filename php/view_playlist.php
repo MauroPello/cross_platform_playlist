@@ -1,10 +1,9 @@
-<?php function view_playlist ($username, $playlist) { 
-    $songs = get_songs("data/$username/$playlist"); 
+<?php function view_playlist ($playlist) { 
+    $songs = get_songs("data/" . $_COOKIE["username"] . "/$playlist"); 
     ?>
     <div class="custom-container">
     <div class="custom-wrapper">
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-        <input style="display: none;" type="text" name="username" value="<?php echo $username; ?>" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="inputGroup-sizing-default" required readonly>
         <input style="display: none;" type="text" name="playlist" value="<?php echo $playlist; ?>" class="form-control" placeholder="Playlist" aria-label="PLaylist" aria-describedby="inputGroup-sizing-default" required readonly>
 
         <div class="table-responsive" style="margin-top: 2%; margin-bottom: 2%;">

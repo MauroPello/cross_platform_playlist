@@ -22,12 +22,8 @@ require "php/view_playlist.php";
 
 <body class="text-center">
 <?php 
-$current_user = ""; 
-
-if ($current_user == "") {
+if (!isset($_COOKIE["username"])) {
     if ($_SERVER["REQUEST_METHOD"] == "GET"){
-        $current_user = "";
-        
         login_form();
     }
     if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["button"])){
@@ -37,7 +33,8 @@ if ($current_user == "") {
         if ($_POST['button'] == "Login"){
             if (checkUsername($accounts, $_POST["username"])) {
                 if (checkPassword($accounts, $_POST["username"], $_POST["password"])) {
-                    $current_user = $_POST["username"];
+                    setcookie("username", $_POST["username"], time()+1*24*60*60);
+                    header('Refresh: 0; url=index.php');
                 }
                 else {
                     alert("Wrong Password!");
@@ -55,17 +52,22 @@ if ($current_user == "") {
                 login_form();
             }
             else {
-                $current_user = $_POST["username"];
+                setcookie("username", $_POST["username"], time()+1*24*60*60);
                 fwrite($fs, "$current_user*|*" . password_hash($_POST["password"], PASSWORD_DEFAULT) . "\n");
+                header('Refresh: 0; url=index.php');
             }
         }
         fclose($fs);
     }
 }
 
-
-if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["button"])) {
-    $current_user = $_POST["username"];
+if (isset($_POST["button"]) && $_POST["button"] == "Log_Out"){
+    unset($_COOKIE['username']); 
+    setcookie('username', '', time()-3600, '/'); 
+    header('Refresh: 0; url=index.php');
+}
+else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POST["button"])) {
+    $current_user = $_COOKIE["username"];
     $user_directory = "data/$current_user/";
     $playlist = $_POST["playlist"];
     if (str_contains($_POST["button"], "View_Playlist")){
@@ -79,7 +81,7 @@ if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["butt
         else{
             create_file($user_directory . $playlist);
         }
-        view_playlist($current_user, $playlist);
+        view_playlist($playlist);
     }
     else if ($_POST["button"] == "Delete_Playlist"){
         if (checkFile($user_directory, $playlist)){
@@ -91,7 +93,7 @@ if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["butt
     }
     else if (str_contains($_POST["button"], "View_Playlist")){
         if (checkFile($user_directory, $playlist)){
-            view_playlist($current_user, $playlist);
+            view_playlist($playlist);
         }
         else{
             alert($playlist . " doesn't exist!");
@@ -109,7 +111,7 @@ if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["butt
             append_to_file($user_directory . $playlist, $song . "*|*" . $id . "*|*" . $platform);
         }
 
-        view_playlist($current_user, $playlist);
+        view_playlist($playlist);
     }
     else if ($_POST["button"] == "Delete_Song"){
         $id = get_id($_POST["url"]);
@@ -121,23 +123,23 @@ if (isset($_POST["username"]) && isset($_POST["playlist"]) && isset($_POST["butt
             alert($song . " doesn't exist!");
         }
 
-        view_playlist($current_user, $playlist);
+        view_playlist($playlist);
     }
     else if (str_contains($_POST["button"], "Play_Song")){
         $start_index = checkSong($user_directory . $playlist, explode("*|*", $_POST["button"])[1]);
 
         play_playlist($user_directory . $playlist, $start_index);
-        view_playlist($current_user, $playlist);
+        view_playlist($playlist);
     }
     else if ($_POST["button"] == "Play_Random"){
         play_playlist($user_directory . $playlist, -1);
-        view_playlist($current_user, $playlist);
+        view_playlist($playlist);
     }
 
-    sidebar($current_user, $playlist);
+    sidebar($playlist);
 }
-else if ($current_user !== "" && !isset($_POST["playlist"])) { 
-    sidebar($current_user, "");
+else if (isset($_COOKIE["username"]) && !isset($_POST["playlist"])) { 
+    sidebar("");
 } ?>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

@@ -44,10 +44,6 @@ function checkSong($filename, $song_id){
 
 function alert($msg){
     echo '<div class="alert alert-danger alert-dismissible" style="z-index: 10000; margin-top: 1%; margin-left: 10%; margin-right: 10%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' . $msg . '</div>';
-} 
-
-function open_link($url){
-    echo '<script type="text/javascript">window.open("' . $url . '","_self");</script>';
 }
 
 function get_songs($filename){
