@@ -103,13 +103,13 @@ function get_songname($url){
 }
 
 function get_platform($url){
-    if (str_contains($url, "https://www.youtube.com/watch?v=") || str_contains($url, "https://youtu.be/")){
+    if (strpos($url, "https://www.youtube.com/watch?v=") !== false || strpos($url, "https://youtu.be/") !== false){
         return "yt";
     }
-    else if (str_contains($url, "https://open.spotify.com/embed/track/") || str_contains($url, "https://open.spotify.com/embed/track/") || str_contains($url, "spotify:track:")){
+    else if (strpos($url, "https://open.spotify.com/embed/track/") !== false || strpos($url, "https://open.spotify.com/embed/track/") !== false || strpos($url, "spotify:track:" !== false)){
         return "sp";
     }
-    else if (str_contains($url, "https://soundcloud.com/")){
+    else if (strpos($url, "https://soundcloud.com/") !== false){
         return "sc";
     }
 }

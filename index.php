@@ -71,7 +71,7 @@ else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POS
     $current_user = $_COOKIE["username"];
     $user_directory = "data/$current_user/";
     $playlist = $_POST["playlist"];
-    if (str_contains($_POST["button"], "View_Playlist")){
+    if (strpos($_POST["button"], 'View_Playlist') !== false){
         $playlist = explode("*|*", $_POST["button"])[1];
     }
 
@@ -92,7 +92,7 @@ else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POS
             alert($playlist . " doesn't exist!");
         }
     }
-    else if (str_contains($_POST["button"], "View_Playlist")){
+    else if (strpos($_POST["button"], "View_Playlist") !== false){
         if (checkFile($user_directory, $playlist)){
             view_playlist($playlist);
         }
@@ -126,7 +126,7 @@ else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POS
 
         view_playlist($playlist);
     }
-    else if (str_contains($_POST["button"], "Play_Song")){
+    else if (strpos($_POST["button"], "Play_Song") !== false){
         $start_index = checkSong($user_directory . $playlist, explode("*|*", $_POST["button"])[1]);
 
         play_playlist($user_directory . $playlist, $start_index);
