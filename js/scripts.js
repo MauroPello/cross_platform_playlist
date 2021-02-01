@@ -1,4 +1,4 @@
-var count = 0;
+var count = -1;
 var yt_player = null;
 var sp_player = null;
 var sc_player = null;
@@ -7,36 +7,41 @@ var songs = [];
 function start_playlist(platforms, ids){
     songs.ids = ids;
     songs.platforms = platforms;
-    count = 0;
-    next_song(platforms[count], ids[count]);
+    count = -1;
+    next();
+    document.getElementById("volumeRange").addEventListener("change", function(){
+        setVolume(songs.platforms[count], this.value);
+    });
 }
 
-function next_song(platform, id){
-    try { stop(); } catch(err) {}
+function next(){
+    stop();
 
-    if (platform == "yt"){
+    count += 1;
+    count = count % songs.ids.length;
+
+    if (songs.platforms[count] == "yt"){
         if (yt_player == null){
             yt_player = new YT.Player('youtube_player', {
-                playerVars: {autoplay: 1, showinfo : 0, controls: 0},
+                playerVars: {autoplay: 1, showinfo : 0},
                 events: { onReady: onPlayerReady }
             });
 
             yt_player.addEventListener("onStateChange", function(state){
                 if(state.data === 0){
-                    console.log("Finished playing " + id);
-                    next_song(songs.platforms[count], songs.ids[count]);
+                    next();
                 }
             });
         }
         else{
-            yt_player.loadVideoById(id, 0);
+            yt_player.loadVideoById(songs.ids[count], 0);
             yt_player.playVideo();
         }
 
         var yt_div = document.getElementById('youtube_player');
         yt_div.style.display = "block";
     }
-    else if (platform == "sp"){
+    else if (songs.platforms[count] == "sp"){
         var sp_div = document.getElementById('spotify_player');
         sp_div.style.display = "block";
         if (sp_player == null){
@@ -44,7 +49,7 @@ function next_song(platform, id){
         }
         // next spotify song
     }
-    else if (platform == "sc"){
+    else if (songs.platforms[count] == "sc"){
         var sc_options = [];
         sc_options.auto_play = true;
         sc_options.color = "#FF5500";
@@ -69,16 +74,17 @@ function next_song(platform, id){
             sc_player = SC.Widget('soundcloud_player');
 
             sc_player.bind(SC.Widget.Events.READY, function() {
-                sc_player.load("https://soundcloud.com/" + id, sc_options);
-
+                sc_player.load("https://soundcloud.com/" + songs.ids[count], sc_options);
+                document.getElementById("volumeRange").value = sc_player.getVolume();
+                mediaControllerToggle(false);
+                
                 sc_player.bind(SC.Widget.Events.FINISH, function() {
-                    console.log("Finished playing " + id);
-                    next_song(songs.platforms[count], songs.ids[count]);
+                    next();
                 });
             });
         }
         else{
-            sc_player.load("https://soundcloud.com/" + id, sc_options);
+            sc_player.load("https://soundcloud.com/" + songs.ids[count], sc_options);
         }
         
         var sc_div = document.getElementById('soundcloud_player');
@@ -87,9 +93,6 @@ function next_song(platform, id){
     
     var div = document.getElementById('video-player-wrapper');
     div.style.display = "block";
-
-    count += 1;
-    count = count % songs.ids.length;
 }
 
 function hide_all_players(){
@@ -105,6 +108,8 @@ function hide_all_players(){
 
 function onPlayerReady(){
     yt_player.playVideo();
+    document.getElementById("volumeRange").value = yt_player.getVolume();
+    mediaControllerToggle(false);
 }
 
 function resume(){
@@ -134,17 +139,36 @@ function pause(){
 function stop(){
     hide_all_players();
 
-    yt_player.stopVideo();
-    // stop spotify player
-    sc_player.pause();
+    try { yt_player.stopVideo(); } catch(err) {}
+    try { sp_player.pause(); } catch(err) {}
+    try { sc_player.pause(); } catch(err) {}
 }
 
 function previous(){
     count -= 2
     if (count < 0){ count += songs.ids.length; }
-    next_song(songs.platforms[count], songs.ids[count]);
+    next();
 }
 
-function next(){
-    next_song(songs.platforms[count], songs.ids[count]);
+function setVolume(platform, volume){
+    if (platform == "yt" && yt_player != null){
+        yt_player.setVolume(volume);
+    }
+    else if (platform == "sp" && sp_player != null){
+
+    }
+    else if (platform == "sc" && sc_player != null){
+        sc_player.setVolume(volume);
+    }
+}
+
+function mediaControllerToggle(value){
+    setTimeout(function(){ 
+        document.getElementById("resume").disabled = value;
+        document.getElementById("pause").disabled = value;
+        document.getElementById("stop").disabled = value;
+        document.getElementById("volumeRange").disabled = value;
+        document.getElementById("next").disabled = value;
+        document.getElementById("previous").disabled = value;
+    }, 1000);
 }

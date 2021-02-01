@@ -1,5 +1,4 @@
 TODO:
-    volume buttons
     connect an sql lite database
     switch order
     figure out to work with the spotify player if possible

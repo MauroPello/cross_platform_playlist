@@ -1,0 +1,36 @@
+.slider {
+    transform: translateX(-4vw) rotate(-90deg);
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 13vw; /* Full-width */
+    height: 1vw; /* Specified height */
+    background: #ffffff; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+    border-radius: .2rem;
+    position: absolute;
+}
+
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 2vw; /* Set a specific slider handle width */
+    height: 2vw; /* Slider handle height */
+    background: #007bff; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+    width: 2vw; /* Set a specific slider handle width */
+    height: 2vw; /* Slider handle height */
+    background: #007bff; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    outline: none; /* Remove outline */
+    border: none; /* Remove outline */
+}

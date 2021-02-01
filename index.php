@@ -13,6 +13,7 @@ require "php/view_playlist.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <link href="css/signin.css" rel="stylesheet" type="text/css">
+    <link href="css/volume-slider.css" rel="stylesheet" type="text/css">
     <link href="css/navbar-fixed-left.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">

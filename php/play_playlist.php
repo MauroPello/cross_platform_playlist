@@ -42,16 +42,17 @@
     <div class="custom-container">
     <div class="custom-wrapper">
     <div class="videoWrapper" style="display: none;" id='video-player-wrapper'>
-        <iframe id='youtube_player' src="http://www.youtube.com/embed/<?php echo $first_youtube_song; ?>?html5=1&enablejsapi=1" frameborder="0"></iframe>
+        <iframe id='youtube_player' src="http://www.youtube.com/embed/<?php echo $first_youtube_song; ?>?html5=1&enablejsapi=1&showinfo=0" frameborder="0"></iframe>
         <iframe id='spotify_player' src="https://open.spotify.com/embed/track/<?php echo $first_spotify_song; ?>" frameborder="0" allowtransparency="true"></iframe>
         <iframe id='soundcloud_player' src="https://w.soundcloud.com/player/?url=https://soundcloud.com/<?php echo $first_soundcloud_song; ?>" scrolling="no" frameborder="no"></iframe>
         <table id="media-controller' class="table table-sm table-borderless table-dark" style="text-align: left; background-color: #272727; border-bottom: 0px solid!important; width: min-content!important; margin-left: 101%!important; margin-right: 5%!important;">
             <tbody>
-                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" onclick="previous()" style="padding: .3rem .4rem!important;"><img src="img/previous.svg"></button></td></tr>
-                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" onclick="resume()" style="padding: .3rem .4rem!important;"><img src="img/play.svg"></button></td></tr>
-                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" onclick="pause()" style="padding: .3rem .4rem!important;"><img src="img/pause.svg"></button></td></tr>
-                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" onclick="stop()" style="padding: .3rem .4rem!important;"><img src="img/stop.svg"></button></td></tr>
-                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" onclick="next()" style="padding: .3rem .4rem!important;"><img src="img/next.svg"></button></td></tr>
+                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" id="previous" onclick="previous()" style="padding: .3rem .4rem!important;" disabled><img src="img/previous.svg"></button></td></tr>
+                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" id="resume" onclick="resume()" style="padding: .3rem .4rem!important;" disabled><img src="img/play.svg"></button></td></tr>
+                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" id="pause" onclick="pause()" style="padding: .3rem .4rem!important;" disabled><img src="img/pause.svg"></button></td></tr>
+                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" id="stop" onclick="stop()" style="padding: .3rem .4rem!important;" disabled><img src="img/stop.svg"></button></td></tr>
+                <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" id="next" onclick="next()" style="padding: .3rem .4rem!important;" disabled><img src="img/next.svg"></button></td></tr>
+                <tr><td style="padding: .2rem!important; height: 13vw; width: 5vw; display: revert; margin-top: 5%;"><input type="range" min="1" max="100" value="50" class="slider" id="volumeRange" disabled></td></tr>
             </tbody>
         </table>
     </div>
