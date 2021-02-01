@@ -71,3 +71,8 @@ body {
 .btn-img img{
     float: left;
 }
+
+.custom-select{
+    color: #ffffff!important;
+    padding: 0!important;
+}

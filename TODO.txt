@@ -1,6 +1,4 @@
 TODO:
-    sidebar vertical scaling
     connect an sql lite database
-    switch order
-    figure out to work with the spotify player if possible
-    video toggle (https://github.com/Ashish-Bansal/audio-only-youtube/tree/master/src/js) (?)
+    deploying to altervista
+    improve sidebar scaling

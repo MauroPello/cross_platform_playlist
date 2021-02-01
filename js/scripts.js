@@ -42,12 +42,14 @@ function next(){
         yt_div.style.display = "block";
     }
     else if (songs.platforms[count] == "sp"){
-        var sp_div = document.getElementById('spotify_player');
-        sp_div.style.display = "block";
         if (sp_player == null){
             // start spotify player
+            mediaControllerToggle(false);
         }
         // next spotify song
+        
+        var sp_div = document.getElementById('spotify_player');
+        sp_div.style.display = "block";
     }
     else if (songs.platforms[count] == "sc"){
         var sc_options = [];
@@ -117,7 +119,7 @@ function resume(){
         yt_player.playVideo();
     }
     else if (songs.platforms[count] == "sp"){
-
+        // play
     }
     else if (songs.platforms[count] == "sc"){
         sc_player.play();
@@ -129,7 +131,7 @@ function pause(){
         yt_player.pauseVideo();
     }
     else if (songs.platforms[count] == "sp"){
-
+        // pause
     }
     else if (songs.platforms[count] == "sc"){
         sc_player.pause();
@@ -155,7 +157,7 @@ function setVolume(platform, volume){
         yt_player.setVolume(volume);
     }
     else if (platform == "sp" && sp_player != null){
-
+        // set volume
     }
     else if (platform == "sc" && sc_player != null){
         sc_player.setVolume(volume);

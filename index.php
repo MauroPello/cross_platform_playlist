@@ -136,6 +136,28 @@ else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POS
         play_playlist($user_directory . $playlist, -1);
         view_playlist($playlist);
     }
+    else if ($_POST["button"] == "Sort"){
+        $indexes = [];
+        $flag = false;
+        foreach ($_POST as $key => $value){
+            if (strpos($key, "index") !== false){
+                if (in_array(intval($value), $indexes)){
+                    $flag = $flag || true;
+                }
+                else{
+                    array_push($indexes, intval($value));
+                }
+            }
+        }
+        if ($flag) {
+            alert("Duplicate Indexes!");
+            view_playlist($playlist);
+        }
+        else{
+            rearrange_file($user_directory . $playlist, $indexes);
+            view_playlist($playlist);
+        }
+    }
 
     sidebar($playlist);
 }

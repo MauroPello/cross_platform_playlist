@@ -29,10 +29,7 @@ function checkFile ($directory, $filename){
 }
 
 function checkSong($filename, $song_id){
-    $fs = fopen($filename, "r") or die("Failed to open file");
-    $songs = explode("\n", stream_get_contents($fs));
-    array_pop($songs);
-    fclose($fs);
+    $songs = get_songs($filename);
 
     for($i = 0; $i < count($songs); $i++){
         if (explode("*|*", $songs[$i])[1] == $song_id){
@@ -79,7 +76,25 @@ function get_songname($url){
         $name = $value['items'][0]['snippet']['title'];
     }
     else if (get_platform($url) == "sp"){
+        $request_url = "https://api.spotify.com/v1/tracks/" . get_id($url) . "";
+        $ch = curl_init();
 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $request_url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $headers = array();
+        $headers[] = 'Accept: application/json';
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: Bearer BQDQB-x4JUTxdFLebSh1KSe6RCaT-Fw0cS4Mfd4HGR0hTj2CStU70mOgRzdUD9cRdjMFDz4o_q8RwBL9Je_4oDxQBN5aQiBzVjFcDuqgAltkAHT3bmSyNUoBDnQoV_LAhJ9DFUK_dW_RhalAJ8ul2tHxrk4N2oU5tfw1qemROmNdBg';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $response = curl_exec($ch);
+    
+        curl_close($ch);
+        $data = json_decode($response);
+        $value = json_decode(json_encode($data), true);
+        $name = $value['artists'][0]["name"] . " - " . $value['name'];
     }
     else if (get_platform($url) == "sc"){
         $request_url = "https://api-widget.soundcloud.com/resolve?url=https://soundcloud.com/" . get_id($url) . "&format=json&client_id=TaTmd2ARXgnp20a7BQJwuZ8xGFbrYgz5";
@@ -106,7 +121,7 @@ function get_platform($url){
     if (strpos($url, "https://www.youtube.com/watch?v=") !== false || strpos($url, "https://youtu.be/") !== false){
         return "yt";
     }
-    else if (strpos($url, "https://open.spotify.com/embed/track/") !== false || strpos($url, "https://open.spotify.com/embed/track/") !== false || strpos($url, "spotify:track:" !== false)){
+    else if (strpos($url, "https://open.spotify.com/track/") !== false || strpos($url, "https://open.spotify.com/embed/track/") !== false || strpos($url, "spotify:track:" !== false)){
         return "sp";
     }
     else if (strpos($url, "https://soundcloud.com/") !== false){
@@ -152,19 +167,30 @@ function get_url($id, $platform){
     return $url;
 }
 
+function rearrange_file($filename, $indexes){
+    $songs = get_songs($filename);
+
+    $to_write = "";
+    for($i = 0; $i < count($songs); $i++){
+        $to_write .= $songs[$indexes[$i]] . "\n";
+    }
+
+    $fs = fopen($filename, "w") or die("Failed to open file");
+    fwrite($fs, $to_write);
+    fclose($fs);
+}
+
 function append_to_file($filename, $text){
     file_put_contents($filename, $text . "\n", FILE_APPEND);
 } 
 
 function delete_song($filename, $song_id){
-    $fs = fopen($filename, "r") or die("Failed to open file");
-    $songs = explode("\n", stream_get_contents($fs));
-    fclose($fs);
+    $songs = get_songs($filename);
 
     $to_write = "";
     foreach($songs as $song){
         if ($song != "" && explode("*|*", $song)[1] !== $song_id){
-            $to_write = $to_write . $song . "\n";
+            $to_write .= $song . "\n";
         } 
     }
 

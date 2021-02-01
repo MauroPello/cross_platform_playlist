@@ -52,7 +52,7 @@
                 <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" id="pause" onclick="pause()" style="padding: .3rem .4rem!important;" disabled><img src="img/pause.svg"></button></td></tr>
                 <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" id="stop" onclick="stop()" style="padding: .3rem .4rem!important;" disabled><img src="img/stop.svg"></button></td></tr>
                 <tr><td style="padding: .2rem!important;"><button class="btn btn-dark btn-img" id="next" onclick="next()" style="padding: .3rem .4rem!important;" disabled><img src="img/next.svg"></button></td></tr>
-                <tr><td style="padding: .2rem!important; height: 13vw; width: 5vw; display: revert; margin-top: 5%;"><input type="range" min="1" max="100" value="50" class="slider" id="volumeRange" disabled></td></tr>
+                <tr><td style="padding: .2rem!important; height: 13vw; width: 5vw; display: revert; margin-top: 5%;"><input type="range" min="0" max="100" value="50" class="slider" id="volumeRange" disabled></td></tr>
             </tbody>
         </table>
     </div>
