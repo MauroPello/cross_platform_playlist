@@ -2,4 +2,4 @@ TODO:
     find correct place for username
     connect an sql lite database
     deploying to altervista
-    improve sidebar scaling
+    improve sidebar scaling (fix fonts calc)

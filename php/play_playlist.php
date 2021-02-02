@@ -1,5 +1,5 @@
 <?php function play_playlist ($start_index) {
-    $songs = get_songs("data/" . $_COOKIE["username"] . "/" . $_COOKIE["playlist"]);
+    $songs = get_songs("data/" . $_SESSION["username"] . "/" . $_SESSION["playlist"]);
 
     $numbers = range(0, count($songs) - 1);
     $indexes = array();

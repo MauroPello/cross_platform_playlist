@@ -1,5 +1,5 @@
 <?php function view_playlist () { 
-    $songs = get_songs("data/" . $_COOKIE["username"] . "/" . $_COOKIE["playlist"]); 
+    $songs = get_songs("data/" . $_SESSION["username"] . "/" . $_SESSION["playlist"]); 
     ?>
     <div class="custom-container">
     <div class="custom-wrapper">

@@ -4,6 +4,8 @@ require "php/login_form.php";
 require "php/sidebar.php";
 require "php/play_playlist.php";
 require "php/view_playlist.php";
+
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +25,7 @@ require "php/view_playlist.php";
 
 <body class="text-center">
 <?php 
-if (!isset($_COOKIE["username"])) {
+if (!isset($_SESSION["username"])) {
     if ($_SERVER["REQUEST_METHOD"] == "GET"){
         login_form();
     }
@@ -34,8 +36,7 @@ if (!isset($_COOKIE["username"])) {
         if ($_POST['button'] == "Login"){
             if (checkUsername($accounts, $_POST["username"])) {
                 if (checkPassword($accounts, $_POST["username"], $_POST["password"])) {
-                    setcookie("username", $_POST["username"], time()+1*24*60*60);
-                    header('Refresh: 0; url=index.php');
+                    $_SESSION['username'] = $_POST["username"];
                 }
                 else {
                     alert("Wrong Password!");
@@ -53,9 +54,8 @@ if (!isset($_COOKIE["username"])) {
                 login_form();
             }
             else if (test_input($_POST["username"]) && test_input($_POST["password"])){
-                setcookie("username", $_POST["username"], time()+1*24*60*60);
+                $_SESSION['username'] = $_POST["username"];
                 fwrite($fs, $_POST["username"] . "*|*" . password_hash($_POST["password"], PASSWORD_DEFAULT) . "\n");
-                header('Refresh: 0; url=index.php');
             }
         }
         fclose($fs);
@@ -63,16 +63,16 @@ if (!isset($_COOKIE["username"])) {
 }
 
 if (isset($_POST["button"]) && $_POST["button"] == "Log_Out"){
-    unset($_COOKIE['username']); 
-    setcookie('username', '', time()-3600, '/'); 
-    unset($_COOKIE['playlist']); 
-    setcookie('playlist', '', time()-3600, '/'); 
+    unset($_SESSION['username']); 
+    unset($_SESSION['playlist']); 
     header('Refresh: 0; url=index.php');
+
+    session_destroy();
 }
-else if (isset($_COOKIE["username"]) && (isset($_POST["playlist"]) || isset($_COOKIE["playlist"])) && isset($_POST["button"])) {
-    $current_user = $_COOKIE["username"];
+else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_SESSION["playlist"])) && isset($_POST["button"])) {
+    $current_user = $_SESSION["username"];
     $user_directory = "data/$current_user/";
-    $playlist = $_COOKIE["playlist"];
+    $playlist = $_SESSION["playlist"];
 
     if ($_POST["button"] == "Create_Playlist"){
         if (checkFile($user_directory, $_POST["playlist"])){
@@ -82,8 +82,8 @@ else if (isset($_COOKIE["username"]) && (isset($_POST["playlist"]) || isset($_CO
             create_file($user_directory . $_POST["playlist"]);
         }
 
-        setcookie("playlist", $_POST["playlist"], time()+1*24*60*60);
-        header('Refresh: 0; url=index.php');
+        $_SESSION["playlist"] = $_POST["playlist"];
+        view_playlist();
     }
     else if ($_POST["button"] == "Delete_Playlist"){
         if (checkFile($user_directory, $playlist) && test_input($_POST["playlist"])){
@@ -96,8 +96,8 @@ else if (isset($_COOKIE["username"]) && (isset($_POST["playlist"]) || isset($_CO
     else if (strpos($_POST["button"], "View_Playlist") !== false){
         $playlist = explode("*|*", $_POST["button"])[1];
         if (checkFile($user_directory, $playlist)){
-            setcookie("playlist", $playlist, time()+1*24*60*60);
-            header('Refresh: 0; url=index.php');
+            $_SESSION["playlist"] = $playlist;
+            view_playlist();
         }
         else{
             alert($playlist . " doesn't exist!");
@@ -164,13 +164,13 @@ else if (isset($_COOKIE["username"]) && (isset($_POST["playlist"]) || isset($_CO
 
     sidebar();
 }
-else if (isset($_COOKIE["username"]) && !isset($_COOKIE["playlist"])) { 
+else if (isset($_SESSION["username"]) && !isset($_SESSION["playlist"])) { 
     sidebar();
 }
-else if (isset($_COOKIE["username"]) && isset($_COOKIE["playlist"])) { 
+else if (isset($_SESSION["username"]) && isset($_SESSION["playlist"])) { 
     sidebar();
     view_playlist();
-} ?>
+}  ?>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
