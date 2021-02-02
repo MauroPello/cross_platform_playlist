@@ -17,6 +17,7 @@ function start_playlist(platforms, ids){
 function next(){
     stop();
 
+    mediaControllerToggle(true);
     count += 1;
     count = count % songs.ids.length;
 
@@ -44,7 +45,6 @@ function next(){
     else if (songs.platforms[count] == "sp"){
         if (sp_player == null){
             // start spotify player
-            mediaControllerToggle(false);
         }
         // next spotify song
         
@@ -93,6 +93,7 @@ function next(){
         sc_div.style.display = "block";
     }
     
+    mediaControllerToggle(false);
     var div = document.getElementById('video-player-wrapper');
     div.style.display = "block";
 }
