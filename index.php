@@ -65,24 +65,25 @@ if (!isset($_COOKIE["username"])) {
 if (isset($_POST["button"]) && $_POST["button"] == "Log_Out"){
     unset($_COOKIE['username']); 
     setcookie('username', '', time()-3600, '/'); 
+    unset($_COOKIE['playlist']); 
+    setcookie('playlist', '', time()-3600, '/'); 
     header('Refresh: 0; url=index.php');
 }
-else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POST["button"])) {
+else if (isset($_COOKIE["username"]) && (isset($_POST["playlist"]) || isset($_COOKIE["playlist"])) && isset($_POST["button"])) {
     $current_user = $_COOKIE["username"];
     $user_directory = "data/$current_user/";
-    $playlist = $_POST["playlist"];
-    if (strpos($_POST["button"], 'View_Playlist') !== false){
-        $playlist = explode("*|*", $_POST["button"])[1];
-    }
+    $playlist = $_COOKIE["playlist"];
 
     if ($_POST["button"] == "Create_Playlist"){
-        if (checkFile($user_directory, $playlist)){
-            alert($playlist . ' already exists!');
+        if (checkFile($user_directory, $_POST["playlist"])){
+            alert($_POST["playlist"] . ' already exists!');
         }
         else{
-            create_file($user_directory . $playlist);
+            create_file($user_directory . $_POST["playlist"]);
         }
-        view_playlist($playlist);
+
+        setcookie("playlist", $_POST["playlist"], time()+1*24*60*60);
+        header('Refresh: 0; url=index.php');
     }
     else if ($_POST["button"] == "Delete_Playlist"){
         if (checkFile($user_directory, $playlist)){
@@ -93,8 +94,10 @@ else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POS
         }
     }
     else if (strpos($_POST["button"], "View_Playlist") !== false){
+        $playlist = explode("*|*", $_POST["button"])[1];
         if (checkFile($user_directory, $playlist)){
-            view_playlist($playlist);
+            setcookie("playlist", $playlist, time()+1*24*60*60);
+            header('Refresh: 0; url=index.php');
         }
         else{
             alert($playlist . " doesn't exist!");
@@ -112,7 +115,7 @@ else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POS
             append_to_file($user_directory . $playlist, $song . "*|*" . $id . "*|*" . $platform);
         }
 
-        view_playlist($playlist);
+        view_playlist();
     }
     else if ($_POST["button"] == "Delete_Song"){
         $id = get_id($_POST["url"]);
@@ -124,17 +127,17 @@ else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POS
             alert($song . " doesn't exist!");
         }
 
-        view_playlist($playlist);
+        view_playlist();
     }
     else if (strpos($_POST["button"], "Play_Song") !== false){
         $start_index = checkSong($user_directory . $playlist, explode("*|*", $_POST["button"])[1]);
 
-        play_playlist($user_directory . $playlist, $start_index);
-        view_playlist($playlist);
+        play_playlist($start_index);
+        view_playlist();
     }
     else if ($_POST["button"] == "Play_Random"){
-        play_playlist($user_directory . $playlist, -1);
-        view_playlist($playlist);
+        play_playlist(-1);
+        view_playlist();
     }
     else if ($_POST["button"] == "Sort"){
         $indexes = [];
@@ -151,18 +154,22 @@ else if (isset($_COOKIE["username"]) && isset($_POST["playlist"]) && isset($_POS
         }
         if ($flag) {
             alert("Duplicate Indexes!");
-            view_playlist($playlist);
+            view_playlist();
         }
         else{
             rearrange_file($user_directory . $playlist, $indexes);
-            view_playlist($playlist);
+            view_playlist();
         }
     }
 
-    sidebar($playlist);
+    sidebar();
 }
-else if (isset($_COOKIE["username"]) && !isset($_POST["playlist"])) { 
-    sidebar("");
+else if (isset($_COOKIE["username"]) && !isset($_COOKIE["playlist"])) { 
+    sidebar();
+}
+else if (isset($_COOKIE["username"]) && isset($_COOKIE["playlist"])) { 
+    sidebar();
+    view_playlist();
 } ?>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

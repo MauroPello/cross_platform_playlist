@@ -1,4 +1,4 @@
-<?php function sidebar ($playlist) {
+<?php function sidebar () {
     $playlists = get_playlists("data/" . $_COOKIE["username"]);
     ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-left">
@@ -12,7 +12,7 @@
                 
                 <div class="form-group">
                     <div class="input-group mb-3">
-                        <input style="border-radius: .25rem!important;" type="text" name="playlist" list="playlists" class="form-control" value="<?php echo $playlist; ?>" placeholder="Playlist" autocomplete="off" aria-label="Playlist" aria-describedby="inputGroup-sizing-default">
+                        <input style="border-radius: .25rem!important;" type="text" name="playlist" list="playlists" class="form-control" value="<?php echo $_COOKIE["playlist"]; ?>" placeholder="Playlist" autocomplete="off" aria-label="Playlist" aria-describedby="inputGroup-sizing-default">
                         <datalist id="playlists">
                             <?php
                                 foreach($playlists as $item){

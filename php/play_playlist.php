@@ -1,8 +1,5 @@
-<?php function play_playlist ($playlist, $start_index) {
-    $fs = fopen($playlist, "r") or die("Failed to open file");
-    $songs = explode("\n", stream_get_contents($fs));
-    array_pop($songs);
-    fclose($fs);
+<?php function play_playlist ($start_index) {
+    $songs = get_songs("data/" . $_COOKIE["username"] . "/" . $_COOKIE["playlist"]);
 
     $numbers = range(0, count($songs) - 1);
     $indexes = array();
