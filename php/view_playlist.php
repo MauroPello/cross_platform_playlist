@@ -3,7 +3,7 @@
     ?>
     <div class="custom-container">
     <div class="custom-wrapper">
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
         <div class="table-responsive" style="margin-top: 2%; margin-bottom: 2%;">
         <table class="table table-sm table-hover table-dark" style="text-align: left; background-color: #272727;">
             <thead>

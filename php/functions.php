@@ -206,4 +206,15 @@ function create_file($filename){
 
 function delete_file($filename){
     unlink($filename);
+}
+
+function test_input($data) {
+    $tmp = $data;
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    if ($tmp == $data){
+        return TRUE;
+    }
+    return FALSE;
 } ?>

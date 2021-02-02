@@ -52,9 +52,9 @@ if (!isset($_COOKIE["username"])) {
                 alert($_POST["username"] . " already exists!");
                 login_form();
             }
-            else {
+            else if (test_input($_POST["username"]) && test_input($_POST["password"])){
                 setcookie("username", $_POST["username"], time()+1*24*60*60);
-                fwrite($fs, "$current_user*|*" . password_hash($_POST["password"], PASSWORD_DEFAULT) . "\n");
+                fwrite($fs, $_POST["username"] . "*|*" . password_hash($_POST["password"], PASSWORD_DEFAULT) . "\n");
                 header('Refresh: 0; url=index.php');
             }
         }
@@ -78,7 +78,7 @@ else if (isset($_COOKIE["username"]) && (isset($_POST["playlist"]) || isset($_CO
         if (checkFile($user_directory, $_POST["playlist"])){
             alert($_POST["playlist"] . ' already exists!');
         }
-        else{
+        else if (test_input($_POST["playlist"])){
             create_file($user_directory . $_POST["playlist"]);
         }
 
@@ -86,8 +86,8 @@ else if (isset($_COOKIE["username"]) && (isset($_POST["playlist"]) || isset($_CO
         header('Refresh: 0; url=index.php');
     }
     else if ($_POST["button"] == "Delete_Playlist"){
-        if (checkFile($user_directory, $playlist)){
-            delete_file($user_directory . $playlist);
+        if (checkFile($user_directory, $playlist) && test_input($_POST["playlist"])){
+            delete_file($user_directory . $_POST["playlist"]);
         }
         else{
             alert($playlist . " doesn't exist!");
