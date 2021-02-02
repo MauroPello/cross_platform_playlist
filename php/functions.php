@@ -1,55 +1,8 @@
 <?php
-function checkUsername ($accounts, $username) {
-    foreach ($accounts as $account){
-        if (explode("*|*", $account)[0] == $username){
-            return TRUE;
-        } 
-    }
-    return FALSE;
-}
-
-function checkPassword ($accounts, $username, $password) {
-    foreach ($accounts as $account){
-        $tmp = explode("*|*", $account);
-        if ($tmp[0] == $username && password_verify($password, $tmp[1])){
-            return TRUE;
-        } 
-    }
-    return FALSE;
-}
-
-function checkFile ($directory, $filename){
-    $files = array_diff(scandir($directory), array(".", ".."));
-    foreach ($files as $file){
-        if ($file == $filename){
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
-function checkSong($filename, $song_id){
-    $songs = get_songs($filename);
-
-    for($i = 0; $i < count($songs); $i++){
-        if (explode("*|*", $songs[$i])[1] == $song_id){
-            return $i;
-        } 
-    }
-    return -1;
-}
-
-function alert($msg){
-    echo '<div class="alert alert-danger alert-dismissible" style="z-index: 10000; margin-top: 1%; margin-left: 10%; margin-right: 10%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' . $msg . '</div>';
-}
-
-function get_songs($filename){
-    $fs = fopen($filename, "r") or die("Failed to open file");
-    $songs = explode("\n", stream_get_contents($fs));
-    array_pop($songs);
+function new_account($username, $password){
+    $fs = fopen("data/accounts.txt", "w") or die("Failed to open file");
+    fwrite($fs, $username . "*|*" . $password . "\n");
     fclose($fs);
-
-    return $songs;
 }
 
 function get_accounts(){
@@ -61,14 +14,103 @@ function get_accounts(){
     return $accounts;
 }
 
-function new_account($username, $password){
-    $fs = fopen("data/accounts.txt", "w") or die("Failed to open file");
-    fwrite($fs, $username . "*|*" . $password . "\n");
+function check_username($username) {
+    $accounts = get_accounts();
+
+    foreach ($accounts as $account){
+        if (explode("*|*", $account)[0] == $username){
+            return TRUE;
+        } 
+    }
+    return FALSE;
+}
+
+function check_password($username, $password) {
+    $accounts = get_accounts();
+
+    foreach ($accounts as $account){
+        $tmp = explode("*|*", $account);
+        if ($tmp[0] == $username && password_verify($password, $tmp[1])){
+            return TRUE;
+        } 
+    }
+    return FALSE;
+}
+
+function new_playlist($user, $playlist){
+    $tmp = fopen("data/" . $user . "/" . $playlist, "w");
+    fclose($tmp);
+}
+
+function delete_playlist($user, $playlist){
+    unlink("data/" . $user . "/" . $playlist);
+}
+
+function get_playlists($user){
+    return array_diff(scandir("data/" . $user . "/"), array(".", ".."));
+}
+
+function check_playlist($user, $playlist){
+    $playlists = get_playlists($user, $playlist);
+
+    foreach ($playlists as $item){
+        if ($item == $playlist){
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+function new_song($user, $playlist, $name, $id, $platform){
+    file_put_contents("data/" . $user . "/" . $playlist, $name . "*|*" . $id . "*|*" . $platform ."\n", FILE_APPEND);
+}
+
+function delete_song($user, $playlist, $id){
+    $songs = get_songs($user, $playlist);
+
+    $to_write = "";
+    foreach($songs as $song){
+        if ($song != "" && explode("*|*", $song)[1] !== $song_id){
+            $to_write .= $song . "\n";
+        } 
+    }
+
+    $fs = fopen("data/" . $user . "/" . $playlist, "w") or die("Failed to open file");
+    fwrite($fs, $to_write);
     fclose($fs);
 }
 
-function get_playlists($user_directory){
-    return array_diff(scandir($user_directory), array(".", ".."));
+function check_song($user, $playlist, $id){
+    $songs = get_songs($user, $playlist);
+
+    for($i = 0; $i < count($songs); $i++){
+        if (explode("*|*", $songs[$i])[1] == $id){
+            return $i;
+        } 
+    }
+    return -1;
+}
+
+function rearrange_songs($user, $playlist, $indexes){
+    $songs = get_songs($user, $playlist);
+
+    $to_write = "";
+    for($i = 0; $i < count($songs); $i++){
+        $to_write .= $songs[$indexes[$i]] . "\n";
+    }
+
+    $fs = fopen("data/" . $user . "/" . $playlist, "w") or die("Failed to open file");
+    fwrite($fs, $to_write);
+    fclose($fs);
+}
+
+function get_songs($user, $playlist){
+    $fs = fopen("data/" . $user . "/" . $playlist, "r") or die("Failed to open file");
+    $songs = explode("\n", stream_get_contents($fs));
+    array_pop($songs);
+    fclose($fs);
+
+    return $songs;
 }
 
 function get_songname($url){
@@ -182,45 +224,8 @@ function get_url($id, $platform){
     return $url;
 }
 
-function rearrange_file($filename, $indexes){
-    $songs = get_songs($filename);
-
-    $to_write = "";
-    for($i = 0; $i < count($songs); $i++){
-        $to_write .= $songs[$indexes[$i]] . "\n";
-    }
-
-    $fs = fopen($filename, "w") or die("Failed to open file");
-    fwrite($fs, $to_write);
-    fclose($fs);
-}
-
-function append_to_file($filename, $text){
-    file_put_contents($filename, $text . "\n", FILE_APPEND);
-} 
-
-function delete_song($filename, $song_id){
-    $songs = get_songs($filename);
-
-    $to_write = "";
-    foreach($songs as $song){
-        if ($song != "" && explode("*|*", $song)[1] !== $song_id){
-            $to_write .= $song . "\n";
-        } 
-    }
-
-    $fs = fopen($filename, "w") or die("Failed to open file");
-    fwrite($fs, $to_write);
-    fclose($fs);
-}
-
-function create_file($filename){
-    $tmp = fopen($filename, "w");
-    fclose($tmp);
-} 
-
-function delete_file($filename){
-    unlink($filename);
+function alert($msg){
+    echo '<div class="alert alert-danger alert-dismissible" style="z-index: 10000; margin-top: 1%; margin-left: 10%; margin-right: 10%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' . $msg . '</div>';
 }
 
 function test_input($data) {

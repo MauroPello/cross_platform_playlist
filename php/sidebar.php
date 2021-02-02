@@ -1,5 +1,5 @@
 <?php function sidebar () {
-    $playlists = get_playlists("data/" . $_SESSION["username"]);
+    $playlists = get_playlists($_SESSION["username"]);
     ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-left">
         <div class="collapse navbar-collapse vertical-center" id="navbarTogglerDemo03" style="display: flex;">
