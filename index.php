@@ -29,9 +29,8 @@ if (!isset($_SESSION["username"])) {
     if ($_SERVER["REQUEST_METHOD"] == "GET"){
         login_form();
     }
-    if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["button"])){
-        $fs = fopen("data/accounts.txt", "a+") or die("Failed to open file");
-        $accounts = explode("\n", stream_get_contents($fs));
+    else if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["button"])){
+        $accounts = get_accounts();
 
         if ($_POST['button'] == "Login"){
             if (checkUsername($accounts, $_POST["username"])) {
@@ -55,10 +54,9 @@ if (!isset($_SESSION["username"])) {
             }
             else if (test_input($_POST["username"]) && test_input($_POST["password"])){
                 $_SESSION['username'] = $_POST["username"];
-                fwrite($fs, $_POST["username"] . "*|*" . password_hash($_POST["password"], PASSWORD_DEFAULT) . "\n");
+                new_account($_POST['username'], password_hash($_POST["password"], PASSWORD_DEFAULT));
             }
         }
-        fclose($fs);
     }
 }
 
@@ -173,8 +171,7 @@ else if (isset($_SESSION["username"]) && isset($_SESSION["playlist"])) {
 }
 
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1200)) {
-    // last request was more than 30 minutes ago
-    session_unset();     // unset $_SESSION variable for the run-time 
+    session_unset();     // unset $_SESSION variable for the run-time
     session_destroy();   // destroy session data in storage
 }
 $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
@@ -182,7 +179,6 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
 if (!isset($_SESSION['CREATED'])) {
     $_SESSION['CREATED'] = time();
 } else if (time() - $_SESSION['CREATED'] > 1200) {
-    // session started more than 30 minutes ago
     session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
     $_SESSION['CREATED'] = time();  // update creation time
 } ?>

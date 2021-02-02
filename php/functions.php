@@ -52,6 +52,21 @@ function get_songs($filename){
     return $songs;
 }
 
+function get_accounts(){
+    $fs = fopen("data/accounts.txt", "r") or die("Failed to open file");
+    $accounts = explode("\n", stream_get_contents($fs));
+    array_pop($accounts);
+    fclose($fs);
+
+    return $accounts;
+}
+
+function new_account($username, $password){
+    $fs = fopen("data/accounts.txt", "w") or die("Failed to open file");
+    fwrite($fs, $username . "*|*" . $password . "\n");
+    fclose($fs);
+}
+
 function get_playlists($user_directory){
     return array_diff(scandir($user_directory), array(".", ".."));
 }
