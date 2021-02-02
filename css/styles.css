@@ -70,9 +70,20 @@ body {
 
 .btn-img img{
     float: left;
+    opacity: 0.7;
+}
+
+.btn-img img:hover {
+    opacity: 1;
 }
 
 .custom-select{
     color: #ffffff!important;
     padding: 0!important;
+}
+
+.sidebar-form-control {
+    border-radius: .25rem!important; 
+    height: calc(1em + .75rem + 2px)!important; 
+    padding: .075rem .375rem!important;
 }

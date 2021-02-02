@@ -37,7 +37,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">URL</span>
                 </div>
-                <input type="text" name="url" class="form-control" placeholder="URL" aria-label="URL" aria-describedby="inputGroup-sizing-default">
+                <input type="text" name="url" class="form-control" placeholder="Enter a valid URL..." aria-label="URL" aria-describedby="inputGroup-sizing-default">
             </div>
 
             <div class="button-div">
