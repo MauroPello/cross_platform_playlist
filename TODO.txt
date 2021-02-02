@@ -1,9 +1,7 @@
 TODO:
     optimize sql functions
     rename playlists
-    go to log in page when the session expired
-    
-    
+
 
 
 

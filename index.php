@@ -7,6 +7,7 @@ require "php/play_playlist.php";
 require "php/view_playlist.php";
 
 session_start();
+update_session_activity(); 
 ?>
 
 <!DOCTYPE html>
@@ -60,8 +61,7 @@ if (!isset($_SESSION["username"])) {
 }
 
 if (isset($_POST["button"]) && $_POST["button"] == "Log_Out"){
-    unset($_SESSION['username']); 
-    unset($_SESSION['playlist']); 
+    session_unset();
     session_destroy();
 
     header('Refresh: 0; url=index.php');
@@ -164,8 +164,7 @@ else if (isset($_SESSION["username"]) && isset($_SESSION["playlist"])) {
     sidebar();
     view_playlist();
 }
-
-update_session_activity(); ?>
+?>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

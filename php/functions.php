@@ -126,15 +126,17 @@ function test_input($data) {
 } 
 
 function update_session_activity(){
-    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1200)) {
+    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 3000)) {
         session_unset();     // unset $_SESSION variable for the run-time
         session_destroy();   // destroy session data in storage
+        
+        header('Refresh: 0; url=index.php');
     }
     $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
 
     if (!isset($_SESSION['CREATED'])) {
         $_SESSION['CREATED'] = time();
-    } else if (time() - $_SESSION['CREATED'] > 1200) {
+    } else if (time() - $_SESSION['CREATED'] > 3000) {
         session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
         $_SESSION['CREATED'] = time();  // update creation time
     } 
