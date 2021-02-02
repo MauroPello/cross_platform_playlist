@@ -1,5 +1,6 @@
 <?php 
 require "php/functions.php";
+require "php/database.php";
 require "php/login_form.php";
 require "php/sidebar.php";
 require "php/play_playlist.php";
@@ -52,7 +53,7 @@ if (!isset($_SESSION["username"])) {
             }
             else if (test_input($_POST["username"]) && test_input($_POST["password"])){
                 $_SESSION['username'] = $_POST["username"];
-                new_account($_POST['username'], password_hash($_POST["password"], PASSWORD_DEFAULT));
+                new_user($_POST['username'], password_hash($_POST["password"], PASSWORD_DEFAULT));
             }
         }
     }
@@ -61,9 +62,9 @@ if (!isset($_SESSION["username"])) {
 if (isset($_POST["button"]) && $_POST["button"] == "Log_Out"){
     unset($_SESSION['username']); 
     unset($_SESSION['playlist']); 
-    header('Refresh: 0; url=index.php');
-
     session_destroy();
+
+    header('Refresh: 0; url=index.php');
 }
 else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_SESSION["playlist"])) && isset($_POST["button"])) {
     if ($_POST["button"] == "Create_Playlist"){
@@ -149,7 +150,7 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
             view_playlist();
         }
         else{
-            rearrange_songs($user_directory, $playlist, $indexes);
+            rearrange_songs($_SESSION["username"], $_SESSION["playlist"], $indexes);
             view_playlist();
         }
     }

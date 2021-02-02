@@ -19,7 +19,7 @@
     $first_spotify_song = "";
     $first_soundcloud_song = "";
     for($i = 0; $i < count($songs); $i++){
-        $song = explode("*|*", $songs[$indexes[$i]]);
+        $song = $songs[$indexes[$i]];
         $id = $song[1];
         array_push($ids, $id);
         $platform = $song[2];

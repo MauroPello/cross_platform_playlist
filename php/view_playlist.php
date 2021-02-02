@@ -16,7 +16,6 @@
             <tbody>
                 <?php 
                     for($i = 0; $i < count($songs); $i++){
-                        $tmp = explode("*|*", $songs[$i]);
                         echo '<tr><td><div style="display: flex; margin-right: 1rem;"><select class="custom-select" name="index' . $i . '" value="' . $i . '" id="inputGroupSelect' . $i . '" style="background: none; border: none;">';
                         for($j = 0; $j < count($songs); $j++){
                             echo '<option value="' . $j . '"';
@@ -25,7 +24,7 @@
                             }
                             echo '>' . $j . '</option>';
                         }
-                        echo '</select><label style="font-size: .9rem; margin: auto 0 auto 0;" for="inputGroupSelect' . $i . '">&#9660;</label></div></td><td><button type="submit" name="button" value="Play_Song*|*' . $tmp[1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $tmp[0] . '</button></td><td><a href="' . get_url($tmp[1], $tmp[2]) . '" target="_blank">' . get_url($tmp[1], $tmp[2]) . '</a></td></tr>';
+                        echo '</select><label style="font-size: .9rem; margin: auto 0 auto 0;" for="inputGroupSelect' . $i . '">&#9660;</label></div></td><td><button type="submit" name="button" value="Play_Song*|*' . $songs[$i][1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $songs[$i][0] . '</button></td><td><a href="' . get_url($songs[$i][1], $songs[$i][2]) . '" target="_blank">' . get_url($songs[$i][1], $songs[$i][2]) . '</a></td></tr>';
                     }
                 ?>
             </tbody>
