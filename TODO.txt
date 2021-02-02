@@ -1,6 +1,5 @@
 TODO:
     optimize sql functions
-    rename playlists
 
 
 

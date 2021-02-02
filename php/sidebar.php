@@ -21,8 +21,9 @@
                     </div>
                 
                     <div class="button-div">
-                        <button style="padding: .2rem .5rem;" type="submit" name="button" value="Create_Playlist" class="btn btn-secondary">Create New</button>
+                        <button style="padding: .2rem .5rem;" type="submit" name="button" value="Create_Playlist" class="btn btn-secondary">Create</button>
                         <button style="padding: .2rem .5rem;" type="submit" name="button" value="Delete_Playlist" class="btn btn-secondary">Delete</button>
+                        <button style="padding: .2rem .5rem;" type="submit" name="button" value="Rename_Playlist" class="btn btn-secondary">Rename</button>
                     </div>
                 </div>
 

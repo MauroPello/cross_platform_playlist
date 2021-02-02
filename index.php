@@ -86,6 +86,17 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
             alert($_POST["playlist"] . " doesn't exist!");
         }
     }
+    else if ($_POST["button"] == "Rename_Playlist"){
+        if (check_playlist($_SESSION["username"], $_POST["playlist"]) && test_input($_POST["playlist"])){
+            alert($_POST["playlist"] . " already exist!");
+        }
+        else{
+            rename_playlist($_SESSION["username"], $_SESSION["playlist"], $_POST["playlist"]);
+        }
+        
+        $_SESSION["playlist"] = $_POST["playlist"];
+        view_playlist();
+    }
     else if (strpos($_POST["button"], "View_Playlist") !== false){
         $playlist = explode("*|*", $_POST["button"])[1];
         if (check_playlist($_SESSION["username"], $playlist)){

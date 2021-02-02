@@ -61,6 +61,14 @@ function delete_playlist($user, $playlist){
     $db->close();
 }
 
+function rename_playlist($user, $playlist, $name){
+    $db = new SQLite3("data/database.sqlite");
+
+    $db->exec(" UPDATE playlists SET playlist_name = '$name' WHERE (playlists.playlist_name == '$playlist' AND playlists.user_name == '$user') ");
+
+    $db->close();
+}
+
 function get_playlists($user){
     $db = new SQLite3("data/database.sqlite");
     
