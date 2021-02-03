@@ -184,15 +184,13 @@ function check_song($user, $playlist, $id){
     return $id;
 }
 
-function rearrange_songs($user, $playlist, $indexes){
+function rearrange_songs($user, $playlist, $ids){
     $db = new SQLite3("data/database.sqlite");
-    $songs = get_songs($user, $playlist);
     $playlist_id = get_playlist_id($user, $playlist);
 
-    for($i = 0; $i < count($songs); $i++){
-        $song_id = $songs[$i][1];
-        $index = $indexes[$i];
-        $db->exec(" UPDATE songs SET song_index = '$index' WHERE songs.playlist_id == '$playlist_id' AND songs.song_id == '$song_id' ");
+    for($i = 0; $i < count($ids); $i++){
+        $song_id = $ids[$i];
+        $db->exec(" UPDATE songs SET song_index = '$i' WHERE songs.playlist_id == '$playlist_id' AND songs.song_id == '$song_id' ");
     }
 
     $db->close();

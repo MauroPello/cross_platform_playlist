@@ -169,26 +169,14 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
         view_playlist();
     }
     else if ($_POST["button"] == "Sort"){
-        $indexes = [];
-        $flag = false;
+        $ids = [];
         foreach ($_POST as $key => $value){
-            if (strpos($key, "index") !== false){
-                if (in_array(intval($value), $indexes)){
-                    $flag = $flag || true;
-                }
-                else{
-                    array_push($indexes, intval($value));
-                }
+            if (strpos($key, "songid") !== false){
+                array_push($ids, explode("*|*", $key)[1]);
             }
         }
-        if ($flag) {
-            alert("Duplicate Indexes!");
-            view_playlist();
-        }
-        else{
-            rearrange_songs($_SESSION["username"], $_SESSION["playlist"], $indexes);
-            view_playlist();
-        }
+        rearrange_songs($_SESSION["username"], $_SESSION["playlist"], $ids);
+        view_playlist();
     }
 
     sidebar();
@@ -209,6 +197,9 @@ else if (isset($_SESSION["username"]) && isset($_SESSION["playlist"])) {
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="https://connect.soundcloud.com/sdk/sdk-3.3.2.js"></script>
 <script src="https://w.soundcloud.com/player/api.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type='text/javascript' src="js/scripts.js"></script>
+<script type='text/javascript' src="js/table.js"></script>
 </body>
 </html>

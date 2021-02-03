@@ -5,7 +5,7 @@
     <div class="custom-wrapper">
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
         <div class="table-responsive" style="margin-top: 2%; margin-bottom: 2%;">
-        <table class="table table-sm table-hover table-dark" style="text-align: left; background-color: #272727;">
+        <table class="table table-sm table-hover table-dark" id="table-song" style="text-align: left; background-color: #272727;">
             <thead>
                 <tr>
                 <th scope="col"><b>#</b></th>
@@ -16,15 +16,7 @@
             <tbody>
                 <?php 
                     for($i = 0; $i < count($songs); $i++){
-                        echo '<tr><td><div style="display: flex; margin-right: 1rem;"><select class="custom-select" name="index' . $i . '" value="' . $i . '" id="inputGroupSelect' . $i . '" style="background: none; border: none;">';
-                        for($j = 0; $j < count($songs); $j++){
-                            echo '<option value="' . $j . '"';
-                            if ($i == $j){
-                                echo ' selected';
-                            }
-                            echo '>' . $j . '</option>';
-                        }
-                        echo '</select><label style="font-size: .9rem; margin: auto 0 auto 0;" for="inputGroupSelect' . $i . '">&#9660;</label></div></td><td><button type="submit" name="button" value="Play_Song*|*' . $songs[$i][1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $songs[$i][0] . '</button></td><td><a href="' . get_url($songs[$i][1], $songs[$i][2]) . '" target="_blank">' . get_url($songs[$i][1], $songs[$i][2]) . '</a></td></tr>';
+                        echo '<tr><td><b>' . $i . '</b></td><td><button type="submit" name="button" value="Play_Song*|*' . $songs[$i][1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $songs[$i][0] . '</button><input type="hidden" name="songid*|*' . $songs[$i][1] . '"></td><td><a href="' . get_url($songs[$i][1], $songs[$i][2]) . '" class="song-url" target="_blank">' . get_url($songs[$i][1], $songs[$i][2]) . '</a></td></tr>';
                     }
                 ?>
             </tbody>
