@@ -72,18 +72,30 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
             alert($_POST["playlist"] . ' already exists!');
         }
         else if (test_input($_POST["playlist"])){
-            new_playlist($_SESSION["username"], $_POST["playlist"]);
+            if  ($_POST["playlist"] !== ""){
+                new_playlist($_SESSION["username"], $_POST["playlist"]);
+                $_SESSION["playlist"] = $_POST["playlist"];
+            }
+            else {
+                alert('Please enter a name!');
+            }
         }
 
-        $_SESSION["playlist"] = $_POST["playlist"];
-        view_playlist();
+        if  ($_SESSION["playlist"] !== ""){
+            view_playlist();
+        }
     }
     else if ($_POST["button"] == "Delete_Playlist"){
         if (check_playlist($_SESSION["username"], $_POST["playlist"]) && test_input($_POST["playlist"])){
             delete_playlist($_SESSION["username"], $_POST["playlist"]);
+            $_SESSION["playlist"] = "";
         }
         else{
             alert($_POST["playlist"] . " doesn't exist!");
+        }
+
+        if  ($_SESSION["playlist"] !== ""){
+            view_playlist();
         }
     }
     else if ($_POST["button"] == "Rename_Playlist"){
@@ -91,11 +103,18 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
             alert($_POST["playlist"] . " already exist!");
         }
         else{
-            rename_playlist($_SESSION["username"], $_SESSION["playlist"], $_POST["playlist"]);
+            if  ($_POST["playlist"] !== ""){
+                rename_playlist($_SESSION["username"], $_SESSION["playlist"], $_POST["playlist"]);
+                $_SESSION["playlist"] = $_POST["playlist"];
+            }
+            else {
+                alert('Please enter a name!');
+            }
         }
-        
-        $_SESSION["playlist"] = $_POST["playlist"];
-        view_playlist();
+
+        if  ($_SESSION["playlist"] !== ""){
+            view_playlist();
+        }
     }
     else if (strpos($_POST["button"], "View_Playlist") !== false){
         $playlist = explode("*|*", $_POST["button"])[1];
@@ -116,7 +135,12 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
             alert($song . " already exists!");
         }
         else{
-            new_song($_SESSION["username"], $_SESSION["playlist"], $song, $id, $platform);
+            if ($song !== "" && $platform !== "" && $id !== ""){
+                new_song($_SESSION["username"], $_SESSION["playlist"], $song, $id, $platform);
+            }
+            else{
+                alert('Please enter all the information required!');
+            }
         }
 
         view_playlist();
@@ -128,6 +152,7 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
             delete_song($_SESSION["username"], $_SESSION["playlist"], $id);
         }
         else{
+            $song = get_songname($_POST["url"]);
             alert($song . " doesn't exist!");
         }
 
