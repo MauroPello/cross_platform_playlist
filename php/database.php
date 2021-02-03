@@ -124,8 +124,11 @@ function new_song($user, $playlist, $name, $id, $platform){
     $db = new SQLite3("data/database.sqlite");
     $playlist_id = get_playlist_id($user, $playlist);
 
-    $res = $db->query(" SELECT MAX(songs.song_index) as max_index FROM songs WHERE songs.playlist_id == '$playlist_id' ");
-    $index = intval($res->fetchArray(SQLITE3_TEXT)["max_index"]) + 1; 
+    $index = 0;
+    $res = $db->query(" SELECT COUNT(songs.song_id) as song_count FROM songs WHERE songs.playlist_id == '$playlist_id' ");
+    while ($row = $res->fetchArray(SQLITE3_TEXT)) {
+        $index = intval($row["song_count"]);
+    }
 
     $db->exec(" INSERT INTO songs VALUES( '$id' , '$playlist_id' , '$name' , '$platform' , $index) ");
 
