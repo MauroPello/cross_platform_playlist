@@ -6,6 +6,8 @@ require "php/sidebar.php";
 require "php/play_playlist.php";
 require "php/view_playlist.php";
 
+ini_set('session.cache_limiter','public');
+session_cache_limiter(false);
 session_start();
 update_session_activity(); 
 ?>
