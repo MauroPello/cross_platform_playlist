@@ -1,7 +1,9 @@
 <?php
 function new_user($username, $password){
     $db = new SQLite3("data/database.sqlite");
-
+    $username = sqlite_escape_string($username);
+    $password = sqlite_escape_string($password);
+    
     $db->exec(" INSERT INTO users VALUES('$username', '$password') ");
 
     $db->close();
@@ -23,7 +25,8 @@ function get_users(){
 
 function check_username($username) {
     $db = new SQLite3("data/database.sqlite");
-    
+    $username = sqlite_escape_string($username);
+   
     $res = $db->query(" SELECT * FROM users WHERE users.user_name == '$username' ");
 
     $users = [];
@@ -49,36 +52,44 @@ function check_password($username, $password) {
     return FALSE;
 }
 
-function new_playlist($user, $playlist){
+function new_playlist($username, $playlist){
     $db = new SQLite3("data/database.sqlite");
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
 
-    $db->exec(" INSERT INTO playlists (playlist_name, user_name) VALUES('$playlist', '$user') ");
+    $db->exec(" INSERT INTO playlists (playlist_name, user_name) VALUES('$playlist', '$username') ");
 
     $db->close();
 }
 
-function delete_playlist($user, $playlist){
+function delete_playlist($username, $playlist){
     $db = new SQLite3("data/database.sqlite");
-    $playlist_id = get_playlist_id($user, $playlist);
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
+    $playlist_id = get_playlist_id($username, $playlist);
 
     delete_all_songs($playlist_id);
-    $db->exec(" DELETE FROM playlists WHERE playlists.playlist_name == '$playlist' AND playlists.user_name == '$user' ");
+    $db->exec(" DELETE FROM playlists WHERE playlists.playlist_name == '$playlist' AND playlists.user_name == '$username' ");
 
     $db->close();
 }
 
-function rename_playlist($user, $playlist, $name){
+function rename_playlist($username, $playlist, $name){
     $db = new SQLite3("data/database.sqlite");
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
+    $name = sqlite_escape_string($name);
 
-    $db->exec(" UPDATE playlists SET playlist_name = '$name' WHERE playlists.playlist_name == '$playlist' AND playlists.user_name == '$user' ");
+    $db->exec(" UPDATE playlists SET playlist_name = '$name' WHERE playlists.playlist_name == '$playlist' AND playlists.user_name == '$username' ");
 
     $db->close();
 }
 
-function get_playlists($user){
+function get_playlists($username){
     $db = new SQLite3("data/database.sqlite");
-    
-    $res = $db->query(" SELECT * FROM playlists WHERE playlists.user_name == '$user' ");
+    $username = sqlite_escape_string($username);
+
+    $res = $db->query(" SELECT * FROM playlists WHERE playlists.user_name == '$username' ");
 
     $playlists = [];
     while ($row = $res->fetchArray(SQLITE3_TEXT)) {
@@ -89,10 +100,12 @@ function get_playlists($user){
     return $playlists;
 }
 
-function get_playlist_id($user, $playlist){
+function get_playlist_id($username, $playlist){
     $db = new SQLite3("data/database.sqlite");
-    
-    $res = $db->query(" SELECT playlists.playlist_id FROM playlists WHERE playlists.playlist_name == '$playlist' AND playlists.user_name == '$user' ");
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
+
+    $res = $db->query(" SELECT playlists.playlist_id FROM playlists WHERE playlists.playlist_name == '$playlist' AND playlists.user_name == '$username' ");
 
     $id = -1;
     while ($row = $res->fetchArray(SQLITE3_TEXT)) {
@@ -103,10 +116,12 @@ function get_playlist_id($user, $playlist){
     return $id;
 }
 
-function check_playlist($user, $playlist){
+function check_playlist($username, $playlist){
     $db = new SQLite3("data/database.sqlite");
-    
-    $res = $db->query(" SELECT * FROM playlists WHERE playlists.user_name == '$user' AND playlists.playlist_name == '$playlist' ");
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
+
+    $res = $db->query(" SELECT * FROM playlists WHERE playlists.user_name == '$username' AND playlists.playlist_name == '$playlist' ");
 
     $playlists = [];
     while ($row = $res->fetchArray(SQLITE3_TEXT)) {
@@ -120,9 +135,14 @@ function check_playlist($user, $playlist){
     return TRUE;
 }
 
-function new_song($user, $playlist, $name, $id, $platform){
+function new_song($username, $playlist, $name, $id, $platform){
     $db = new SQLite3("data/database.sqlite");
-    $playlist_id = get_playlist_id($user, $playlist);
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
+    $name = sqlite_escape_string($name);
+    $id = sqlite_escape_string($id);
+    $platform = sqlite_escape_string($platform);
+    $playlist_id = get_playlist_id($username, $playlist);
 
     $index = 0;
     $res = $db->query(" SELECT COUNT(songs.song_id) as song_count FROM songs WHERE songs.playlist_id == '$playlist_id' ");
@@ -135,9 +155,12 @@ function new_song($user, $playlist, $name, $id, $platform){
     $db->close();
 }
 
-function delete_song($user, $playlist, $id){
+function delete_song($username, $playlist, $id){
     $db = new SQLite3("data/database.sqlite");
-    $playlist_id = get_playlist_id($user, $playlist);
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
+    $id = sqlite_escape_string($id);
+    $playlist_id = get_playlist_id($username, $playlist);
 
     $db->exec(" UPDATE songs SET song_index = song_index - 1 WHERE playlist_id == '$playlist_id' AND song_index > (SELECT song_index FROM songs WHERE song_id == '$id') ");
 
@@ -154,9 +177,11 @@ function delete_all_songs($playlist_id){
     $db->close();
 }
 
-function get_songs($user, $playlist){
+function get_songs($username, $playlist){
     $db = new SQLite3("data/database.sqlite");
-    $playlist_id = get_playlist_id($user, $playlist);
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
+    $playlist_id = get_playlist_id($username, $playlist);
 
     $res = $db->query(" SELECT * FROM songs WHERE songs.playlist_id == '$playlist_id' ORDER BY songs.song_index ASC ");
 
@@ -169,9 +194,12 @@ function get_songs($user, $playlist){
     return $songs;
 }
 
-function check_song($user, $playlist, $id){
+function check_song($username, $playlist, $id){
     $db = new SQLite3("data/database.sqlite");
-    $playlist_id = get_playlist_id($user, $playlist);
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
+    $id = sqlite_escape_string($id);
+    $playlist_id = get_playlist_id($username, $playlist);
     
     $res = $db->query(" SELECT songs.song_index FROM songs WHERE songs.playlist_id == '$playlist_id' AND songs.song_id == '$id' ");
 
@@ -184,15 +212,21 @@ function check_song($user, $playlist, $id){
     return $id;
 }
 
-function rearrange_songs($user, $playlist, $ids){
+function rearrange_songs($username, $playlist, $ids){
     $db = new SQLite3("data/database.sqlite");
-    $playlist_id = get_playlist_id($user, $playlist);
+    $username = sqlite_escape_string($username);
+    $playlist = sqlite_escape_string($playlist);
+    $playlist_id = get_playlist_id($username, $playlist);
 
     for($i = 0; $i < count($ids); $i++){
-        $song_id = $ids[$i];
+        $song_id = sqlite_escape_string($ids[$i]);
         $db->exec(" UPDATE songs SET song_index = '$i' WHERE songs.playlist_id == '$playlist_id' AND songs.song_id == '$song_id' ");
     }
 
     $db->close();
+}
+
+function sqlite_escape_string($string){
+    return SQLite3::escapeString($string);
 }
 ?>
