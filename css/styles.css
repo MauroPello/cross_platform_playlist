@@ -6,6 +6,19 @@ body {
     margin-left: 20%;
 }
 
+.custom-container {
+    margin-left: 20%!important;
+}
+
+@media screen and (max-width: 500px){
+    body {
+        margin-left: 30%!important; 
+    }
+    .custom-container {
+        margin-left: 0%!important;
+    }
+}
+
 .videoWrapper {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 */
@@ -56,10 +69,6 @@ body {
     margin-right: 5%;
     margin-top: 2%;
     margin-bottom: 2%;
-}
-
-.custom-container {
-    margin-left: 20%!important;
 }
 
 .btn-img {

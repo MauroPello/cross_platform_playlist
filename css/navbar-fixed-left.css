@@ -11,6 +11,12 @@
   right: auto;
 }
 
+@media screen and (max-width: 500px){
+  .navbar.fixed-left {
+      width: 30%!important; 
+  }
+}
+
 .navbar.fixed-left .navbar-collapse {
   flex-grow: 0;
   flex-direction: column;

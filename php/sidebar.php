@@ -43,7 +43,7 @@
                     </tbody>
                 </table>
                 </div>
-                <button class="btn btn-secondary nav-item" type="submit" name="button" value="Log_Out" style="font-weight: bold;">Log Out</button>
+                <button class="btn btn-secondary nav-item" type="submit" name="button" value="Log_Out" style="font-weight: bold; padding: .2rem .5rem;">Log Out</button>
             </form>
         </div>
     </nav>
