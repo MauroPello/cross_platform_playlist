@@ -70,7 +70,7 @@ function next(){
         
         if (sc_player == null){
             SC.initialize({
-                client_id: 'TaTmd2ARXgnp20a7BQJwuZ8xGFbrYgz5'
+                client_id: 'ENTER_ID_HERE'
             });
 
             sc_player = SC.Widget('soundcloud_player');
