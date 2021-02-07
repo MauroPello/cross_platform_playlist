@@ -114,15 +114,11 @@ function alert($msg){
     echo '<div class="alert alert-danger alert-dismissible" style="z-index: 10000; margin-top: 1%; margin-left: 10%; margin-right: 10%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' . $msg . '</div>';
 }
 
-function test_input($data) {
-    $tmp = $data;
+function clean_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
-    if ($tmp == $data){
-        return TRUE;
-    }
-    return FALSE;
+    return $data;
 } 
 
 function update_session_activity(){
