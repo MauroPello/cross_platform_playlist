@@ -137,7 +137,6 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
             foreach ($ids as $id){
                 $song_platform = $platform;
                 $song = get_songname($id, $song_platform);
-                alert($song);
                 if ($song_platform == "sp"){
                     $song_platform = "yt";
                     $id = search_ytsong($song);
