@@ -11,7 +11,7 @@
   right: auto;
 }
 
-@media screen and (max-width: 500px){
+@media screen and (max-width: 750px), (max-height: 550px){
   .navbar.fixed-left {
       width: 30%!important; 
   }

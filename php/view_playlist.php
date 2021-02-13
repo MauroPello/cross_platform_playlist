@@ -8,7 +8,6 @@
         <table class="table table-sm table-hover table-dark" id="table-song" style="text-align: left; background-color: #272727;">
             <thead>
                 <tr>
-                <th scope="col"><b>#</b></th>
                 <th scope="col"><b>Name</b></th>
                 <th scope="col"><b>Direct Link</b></th>
                 </tr>
@@ -16,7 +15,7 @@
             <tbody>
                 <?php 
                     for($i = 0; $i < count($songs); $i++){
-                        echo '<tr><td><b>' . $i . '</b></td><td><button type="submit" name="button" value="Play_Song*|*' . $songs[$i][1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $songs[$i][0] . '</button><input type="hidden" name="songid*|*' . $songs[$i][1] . '"></td><td><a href="' . get_url($songs[$i][1], $songs[$i][2]) . '" class="song-url" target="_blank">' . get_url($songs[$i][1], $songs[$i][2]) . '</a></td></tr>';
+                        echo '<tr><td><button type="submit" name="button" value="Play_Song*|*' . $songs[$i][1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $songs[$i][0] . '</button><input type="hidden" name="songid*|*' . $songs[$i][1] . '"></td><td><a href="' . get_url($songs[$i][1], $songs[$i][2]) . '" class="song-url" target="_blank">' . get_url($songs[$i][1], $songs[$i][2]) . '</a></td></tr>';
                     }
                 ?>
             </tbody>

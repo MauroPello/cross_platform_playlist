@@ -10,13 +10,32 @@ body {
     margin-left: 20%!important;
 }
 
-@media screen and (max-width: 500px){
+@media screen and (max-width: 750px), (max-height: 550px){
     body {
         margin-left: 30%!important; 
     }
     .custom-container {
         margin-left: 0%!important;
     }
+    .sitename {
+        display: none;
+    }
+    .btn {
+        padding: .1rem!important;
+    }
+}
+
+@media screen and (max-height: 550px){
+    .logoimg {
+        display: none;
+    }
+}
+
+.table-sm th {
+    padding: 0!important;
+}
+.table-sm td {
+    padding: 0!important;
 }
 
 .videoWrapper {
