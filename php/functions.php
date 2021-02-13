@@ -141,10 +141,53 @@ function get_song_ids($id, $platform){
         }
     }
     else if ($platform == "sp"){
+        $request_url = "https://api.spotify.com/v1/playlists/$id/tracks";
+        $ch = curl_init();
 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $request_url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $headers = array();
+        $headers[] = 'Accept: application/json';
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: Bearer ' . get_new_spotify_token();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $response = curl_exec($ch);
+    
+        curl_close($ch);
+        $data = json_decode($response);
+        $value = json_decode(json_encode($data), true);
+        foreach ($value['items'] as $item){
+            array_push($ids, $item['track']['id']);
+        }
     }
     else if ($platform == "sc"){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://api-widget.soundcloud.com/resolve?url=https://soundcloud.com/$id&client_id=TaTmd2ARXgnp20a7BQJwuZ8xGFbrYgz5");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        curl_close($ch);
 
+        $data = json_decode($response);
+        $value = json_decode(json_encode($data), true);
+        foreach ($value['tracks'] as $track){
+            if (isset($track['permalink_url'])){
+                array_push($ids, get_id($track['permalink_url'], $platform));
+            }
+            else{
+                $ch = curl_init();
+                $track_id = $track['id'];
+                curl_setopt($ch, CURLOPT_URL, "https://api-widget.soundcloud.com/tracks/$track_id?client_id=TaTmd2ARXgnp20a7BQJwuZ8xGFbrYgz5");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                $data = json_decode($response);
+                $value = json_decode(json_encode($data), true);
+                array_push($ids, get_id($value['permalink_url'], $platform));
+            }
+        }
     }
 
     return $ids;

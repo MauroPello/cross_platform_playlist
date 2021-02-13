@@ -135,19 +135,21 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
         if (is_playlist($url)){
             $ids = get_song_ids(get_id($url, $platform), $platform);
             foreach ($ids as $id){
-                $song = get_songname($id, $platform);
-                if ($platform == "sp"){
-                    $platform = "yt";
+                $song_platform = $platform;
+                $song = get_songname($id, $song_platform);
+                alert($song);
+                if ($song_platform == "sp"){
+                    $song_platform = "yt";
                     $id = search_ytsong($song);
-                    $song = get_songname($id, $platform);
+                    $song = get_songname($id, $song_platform);
                 }
         
                 if (check_song($_SESSION["username"], $_SESSION["playlist"], $id) >= 0){
                     alert($song . " already exists!");
                 }
                 else{
-                    if ($song !== "" && $platform !== "" && $id !== ""){
-                        new_song($_SESSION["username"], $_SESSION["playlist"], $song, $id, $platform);
+                    if ($song !== "" && $song_platform !== "" && $id !== ""){
+                        new_song($_SESSION["username"], $_SESSION["playlist"], $song, $id, $song_platform);
                     }
                     else{
                         alert('Please enter all the information required!');
