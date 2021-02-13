@@ -129,21 +129,51 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
             alert($playlist . " doesn't exist!");
         }
     }
-    else if ($_POST["button"] == "Add_Song"){
+    else if ($_POST["button"] == "Add"){
         $url = clean_input($_POST["url"]);
-        $song = get_songname($url);
         $platform = get_platform($url);
-        $id = get_id($url);
-
-        if (check_song($_SESSION["username"], $_SESSION["playlist"], $id) >= 0){
-            alert($song . " already exists!");
+        if (is_playlist($url)){
+            $ids = get_song_ids(get_id($url, $platform), $platform);
+            foreach ($ids as $id){
+                $song = get_songname($id, $platform);
+                if ($platform == "sp"){
+                    $platform = "yt";
+                    $id = search_ytsong($song);
+                    $song = get_songname($id, $platform);
+                }
+        
+                if (check_song($_SESSION["username"], $_SESSION["playlist"], $id) >= 0){
+                    alert($song . " already exists!");
+                }
+                else{
+                    if ($song !== "" && $platform !== "" && $id !== ""){
+                        new_song($_SESSION["username"], $_SESSION["playlist"], $song, $id, $platform);
+                    }
+                    else{
+                        alert('Please enter all the information required!');
+                    }
+                }
+            }
         }
         else{
-            if ($song !== "" && $platform !== "" && $id !== ""){
-                new_song($_SESSION["username"], $_SESSION["playlist"], $song, $id, $platform);
+            $id = get_id($url, $platform);
+            $song = get_songname($id, $platform);
+            if ($platform == "sp"){
+                $platform = "yt";
+                $id = search_ytsong($song);
+                $song = get_songname($id, $platform);
+            }
+    
+            if (check_song($_SESSION["username"], $_SESSION["playlist"], $id) >= 0){
+                alert($song . " already exists!");
             }
             else{
-                alert('Please enter all the information required!');
+                if ($song !== "" && $platform !== "" && $id !== ""){
+                    new_song($_SESSION["username"], $_SESSION["playlist"], $song, $id, $platform);
+                }
+                else{
+                    alert('Please enter all the information required!');
+                }
             }
         }
 
@@ -151,7 +181,7 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
     }
     else if ($_POST["button"] == "Delete_Song"){
         $url = clean_input($_POST["url"]);
-        $id = get_id($url);
+        $id = get_id($url, get_platform($url));
 
         if (check_song($_SESSION["username"], $_SESSION["playlist"], $id) >= 0){
             delete_song($_SESSION["username"], $_SESSION["playlist"], $id);

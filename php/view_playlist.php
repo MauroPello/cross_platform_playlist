@@ -31,7 +31,7 @@
             </div>
 
             <div class="button-div">
-                <button type="submit" name="button" value="Add_Song" class="btn btn-dark">Add Song</button>
+                <button type="submit" name="button" value="Add" class="btn btn-dark">Add</button>
                 <button type="submit" name="button" value="Delete_Song" class="btn btn-dark">Delete Song</button>
                 <button type="submit" name="button" value="Sort" class="btn btn-dark">Sort</button>
                 <button type="submit" name="button" value="Play_Random" class="btn btn-dark">Shuffle Play</button>
