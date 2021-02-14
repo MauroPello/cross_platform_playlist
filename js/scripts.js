@@ -11,6 +11,7 @@ function start_playlist(platforms, ids){
     next();
     document.getElementById("volumeRange").addEventListener("change", function(){
         setVolume(songs.platforms[count], this.value);
+        setCookie(songs.platforms[count] + "_volume", this.value, 30);
     });
 }
 
@@ -37,6 +38,9 @@ function next(){
         else{
             yt_player.loadVideoById(songs.ids[count], 0);
             yt_player.playVideo();
+            setTimeout(function(){ 
+                setVolume("yt", getVolumeFromCookie("yt"));
+            }, 1000);
         }
 
         var yt_div = document.getElementById('youtube_player');
@@ -77,7 +81,9 @@ function next(){
 
             sc_player.bind(SC.Widget.Events.READY, function() {
                 sc_player.load("https://soundcloud.com/" + songs.ids[count], sc_options);
-                document.getElementById("volumeRange").value = sc_player.getVolume();
+                setTimeout(function(){ 
+                    setVolume("sc", getVolumeFromCookie("sc"));
+                }, 2000);
                 mediaControllerToggle(false);
                 
                 sc_player.bind(SC.Widget.Events.FINISH, function() {
@@ -87,6 +93,9 @@ function next(){
         }
         else{
             sc_player.load("https://soundcloud.com/" + songs.ids[count], sc_options);
+            setTimeout(function(){ 
+                setVolume("sc", getVolumeFromCookie("sc"));
+            }, 2000);
         }
         
         var sc_div = document.getElementById('soundcloud_player');
@@ -111,7 +120,9 @@ function hide_all_players(){
 
 function onPlayerReady(){
     yt_player.playVideo();
-    document.getElementById("volumeRange").value = yt_player.getVolume();
+    setTimeout(function(){ 
+        setVolume("yt", getVolumeFromCookie("yt"));
+    }, 1000);
     mediaControllerToggle(false);
 }
 
@@ -163,6 +174,21 @@ function setVolume(platform, volume){
     else if (platform == "sc" && sc_player != null){
         sc_player.setVolume(volume);
     }
+    document.getElementById("volumeRange").value = volume;
+}
+
+function getVolumeFromCookie(platform){
+    var volume = 0;
+    if (platform == "yt"){
+        volume = getCookie("yt_volume");
+    }
+    else if (platform == "sp"){
+        volume = getCookie("sp_volume");
+    }
+    else if (platform == "sc"){
+        volume = getCookie("sc_volume");
+    }
+    return volume;
 }
 
 function mediaControllerToggle(value){
@@ -174,4 +200,27 @@ function mediaControllerToggle(value){
         document.getElementById("next").disabled = value;
         document.getElementById("previous").disabled = value;
     }, 1000);
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
