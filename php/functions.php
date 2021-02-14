@@ -1,22 +1,28 @@
 <?php
 function get_songname($id, $platform){
-    $name = "";
+    $name = "Name not Found";
     if ($platform == "yt"){
-        $request_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=$id&key=AIzaSyBaZ6kbZDxm2XQo7w10qXj_51qVAqGDLGQ";
-        $ch = curl_init();
+        $request_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=$id&key=";
+        $yt_keys = ["AIzaSyBaZ6kbZDxm2XQo7w10qXj_51qVAqGDLGQ", "AIzaSyDssmgRGF29D1ipsz-s_wispDJS0nRi2qM"];
+        foreach($yt_keys as $key){
+            $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $request_url);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $response = curl_exec($ch);
-    
-        curl_close($ch);
-        $data = json_decode($response);
-        $value = json_decode(json_encode($data), true);
-        $name = $value['items'][0]['snippet']['title'];
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_URL, $request_url . $key);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($ch, CURLOPT_VERBOSE, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $response = curl_exec($ch);
+        
+            curl_close($ch);
+            $data = json_decode($response);
+            $value = json_decode(json_encode($data), true);
+            if(!isset($value['error'])){
+                $name = $value['items'][0]['snippet']['title'];
+                break;
+            }
+        }
     }
     else if ($platform == "sp"){
         $request_url = "https://api.spotify.com/v1/tracks/$id";
@@ -80,23 +86,27 @@ function get_new_spotify_token(){
 }
 
 function search_ytsong($name){
-    $name = str_replace(" ", "%20", $name);
-    alert($name);
-    $request_url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=$name&safeSearch=none&key=AIzaSyBaZ6kbZDxm2XQo7w10qXj_51qVAqGDLGQ";
-    $ch = curl_init();
+    $name = urlencode($name);
+    $request_url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=$name&safeSearch=none&key=";
+    $yt_keys = ["AIzaSyBaZ6kbZDxm2XQo7w10qXj_51qVAqGDLGQ", "AIzaSyDssmgRGF29D1ipsz-s_wispDJS0nRi2qM"];
+    foreach($yt_keys as $key){
+        $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_URL, $request_url);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    curl_setopt($ch, CURLOPT_VERBOSE, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($ch);
-
-    curl_close($ch);
-    $data = json_decode($response);
-    $value = json_decode(json_encode($data), true);
-    return $value['items'][0]['id']['videoId'];
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $request_url . $key);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+    
+        curl_close($ch);
+        $data = json_decode($response);
+        $value = json_decode(json_encode($data), true);
+        if(!isset($value['error'])){
+            return $value['items'][0]['id']['videoId'];
+        }
+    }
 }
 
 function is_playlist($url){
