@@ -23,6 +23,9 @@ body {
     .btn {
         padding: .1rem!important;
     }
+    .slider { 
+        display: none!important;
+    }
 }
 
 @media screen and (max-height: 550px){
