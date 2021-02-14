@@ -81,6 +81,7 @@ function get_new_spotify_token(){
 
 function search_ytsong($name){
     $name = str_replace(" ", "%20", $name);
+    alert($name);
     $request_url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=$name&safeSearch=none&key=AIzaSyBaZ6kbZDxm2XQo7w10qXj_51qVAqGDLGQ";
     $ch = curl_init();
 

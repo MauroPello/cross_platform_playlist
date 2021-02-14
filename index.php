@@ -188,7 +188,7 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
             delete_song($_SESSION["username"], $_SESSION["playlist"], $id);
         }
         else{
-            $song = get_songname($url);
+            $song = get_songname($id, get_platform($url));
             alert($song . " doesn't exist!");
         }
 
