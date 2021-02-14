@@ -180,9 +180,8 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
 
         view_playlist();
     }
-    else if ($_POST["button"] == "Delete_Song"){
-        $url = clean_input($_POST["url"]);
-        $id = get_id($url, get_platform($url));
+    else if (strpos($_POST["button"], "Delete_Song") !== false){
+        $id = clean_input(explode("*|*", $_POST["button"])[1]);
 
         if (check_song($_SESSION["username"], $_SESSION["playlist"], $id) >= 0){
             delete_song($_SESSION["username"], $_SESSION["playlist"], $id);
