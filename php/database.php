@@ -162,7 +162,7 @@ function delete_song($username, $playlist, $id){
     $id = sqlite_escape_string($id);
     $playlist_id = get_playlist_id($username, $playlist);
 
-    $db->exec(" UPDATE songs SET song_index = song_index - 1 WHERE playlist_id == '$playlist_id' AND song_index > (SELECT song_index FROM songs WHERE song_id == '$id') ");
+    $db->exec(" UPDATE songs SET song_index = song_index - 1 WHERE playlist_id == '$playlist_id' AND song_index > (SELECT song_index FROM songs WHERE song_id == '$id' AND playlist_id == '$playlist_id') ");
 
     $db->exec(" DELETE FROM songs WHERE (songs.playlist_id == '$playlist_id' AND songs.song_id == '$id') ");
 
