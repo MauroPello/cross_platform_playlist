@@ -24,7 +24,7 @@
             <tbody>
                 <?php 
                     for($i = 0; $i < count($songs); $i++){
-                        echo '<tr><td><button type="submit" name="button" value="Play_Song*|*' . $songs[$i][1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $songs[$i][0] . '</button><input type="hidden" name="songid*|*' . $songs[$i][1] . '"></td><td><button class="btn btn-img" name="button" value="Delete_Song*|*' . $songs[$i][1] . '" style="padding: .1rem .2rem!important;" width="2vw" height="2vw"><img src="img/close.svg" width="100%" height="100%" ></button></td></tr>';
+                        echo '<tr><td><button type="submit" name="button" value="Play_Song*|*' . $songs[$i][1] . '" class="btn btn-link" style="margin: 0; padding: 0; text-align: left;">' . $songs[$i][0] . '</button><input type="hidden" name="songid*|*' . $songs[$i][1] . '"></td><td><button class="btn btn-img" name="button" value="Delete_Song*|*' . $songs[$i][1] . '" style="padding: .1rem .2rem!important;" width="2vw" height="2vw">❌</button></td></tr>';
                     }
                 ?>
             </tbody>
