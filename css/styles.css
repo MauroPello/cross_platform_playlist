@@ -41,6 +41,10 @@ body {
     padding: 0!important;
 }
 
+.btn-link {
+  padding: .1rem!important;
+}
+
 .videoWrapper {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 */
@@ -79,7 +83,7 @@ body {
 }
 
 .table {
-    border-bottom: 1px solid #454d55;
+    border-bottom: 0px solid;
 }
 
 .table thead th{

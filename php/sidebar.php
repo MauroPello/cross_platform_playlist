@@ -27,7 +27,7 @@
                     </div>
                 </div>
 
-                <div class="table-responsive" style="margin-top: 10%;">
+                <div class="table-responsive" style="scrollbar-width: none;margin-top: 10%; margin-bottom: 10%; width: 100%!important; max-height: 30vh">
                 <table class="table table-sm table-hover table-dark">
                     <thead>
                         <tr>
