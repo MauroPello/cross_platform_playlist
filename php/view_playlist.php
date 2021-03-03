@@ -7,7 +7,7 @@
         <div class="form-group">
             <div class="input-group mb-3">
                 <input type="text" name="url" class="form-control" style="border-radius: .25rem!important;" placeholder="URL" aria-label="URL" aria-describedby="inputGroup-sizing-default">
-                <button type="submit" style="margin: .1rem!important; display: none;" name="button" value="Add" class="btn btn-dark">Add</button>
+                <button type="submit" style="margin: .1rem!important;" name="button" value="Add" class="btn btn-dark">Add</button>
                 <button type="submit" style="margin: .1rem!important;" name="button" value="Sort" class="btn btn-dark">Sort</button>
                 <button type="submit" style="margin: .1rem!important; padding: .1rem!important; width: 3vw!important; height: calc(1.5em + .75rem + 2px)!important; min-width: 20px !important;" name="button" value="Play_Random" class="btn btn-dark"><img src="img/shuffle.svg" width="100%" height="100%"></button>
             </div>
