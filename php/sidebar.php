@@ -3,7 +3,7 @@
     ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-left">
         <div class="collapse navbar-collapse vertical-center" id="navbarTogglerDemo03" style="display: flex;">
-            <img class="mb-4 text-center logoimg" src="img/logo.png" alt="" width="50%" height="50%">
+            <a href="./" ><img class="mb-4 text-center logoimg" src="img/logo.png" alt="" width="50%"></a>
             <a class="nav-item sitename" href="./" style="margin-bottom: 15%; font-weight: bold; width: 80%; font-size: 1.25rem; color: white;">All Around Playlist</a>
             <span class="nav-item" style="margin-bottom: 5%; font-weight: bold; width: 80%;"><?php echo "User: " . $_SESSION["username"]; ?></span>
 

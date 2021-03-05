@@ -9,7 +9,16 @@ require "php/view_playlist.php";
 ini_set('session.cache_limiter','public');
 session_cache_limiter(false);
 session_start();
-update_session_activity(); 
+update_session_activity();
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["rearrange_songs"]) && isset($_SESSION["username"]) && isset($_SESSION["playlist"])){
+    $ids = [];
+    foreach (explode("*|*", $_POST["rearrange_songs"]) as $value)
+        array_push($ids, $value);
+
+    rearrange_songs($_SESSION["username"], $_SESSION["playlist"], $ids);
+}
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +80,7 @@ if (isset($_POST["button"]) && $_POST["button"] == "Log_Out"){
     header('Refresh: 0; url=index.php');
 }
 else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_SESSION["playlist"])) && isset($_POST["button"])) {
+    
     if ($_POST["button"] == "Create_Playlist"){
         $playlist = clean_input($_POST["playlist"]);
         if (check_playlist($_SESSION["username"], $playlist)){
@@ -209,16 +219,6 @@ else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_S
     }
     else if ($_POST["button"] == "Play_Random"){
         play_playlist(-1);
-        view_playlist();
-    }
-    else if ($_POST["button"] == "Sort"){
-        $ids = [];
-        foreach ($_POST as $key => $value){
-            if (strpos($key, "songid") !== false){
-                array_push($ids, clean_input(explode("*|*", $key)[1]));
-            }
-        }
-        rearrange_songs($_SESSION["username"], $_SESSION["playlist"], $ids);
         view_playlist();
     }
 
