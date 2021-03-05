@@ -80,7 +80,6 @@ if (isset($_POST["button"]) && $_POST["button"] == "Log_Out"){
     header('Refresh: 0; url=index.php');
 }
 else if (isset($_SESSION["username"]) && (isset($_POST["playlist"]) || isset($_SESSION["playlist"])) && isset($_POST["button"])) {
-    
     if ($_POST["button"] == "Create_Playlist"){
         $playlist = clean_input($_POST["playlist"]);
         if (check_playlist($_SESSION["username"], $playlist)){
