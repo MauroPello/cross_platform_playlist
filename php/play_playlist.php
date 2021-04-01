@@ -45,8 +45,7 @@
         <table id="media-controller' class="table table-sm table-borderless table-dark" style="text-align: left; background-color: #272727; border-bottom: 0px solid!important; width: min-content!important; margin-left: 101%!important; margin-right: 5%!important;">
             <tbody>
                 <tr><td style="padding: .2rem!important;"><button class="btn btn-img mediacontrol" id="previous" onclick="previous()" style="padding: .1rem .1rem!important;" disabled><img src="img/previous.svg"></button></td></tr>
-                <tr><td style="padding: .2rem!important;"><button class="btn btn-img mediacontrol" id="resume" onclick="resume()" style="padding: .1rem .1rem!important;" disabled><img src="img/play.svg"></button></td></tr>
-                <tr><td style="padding: .2rem!important;"><button class="btn btn-img mediacontrol" id="pause" onclick="pause()" style="padding: .1rem .1rem!important;" disabled><img src="img/pause.svg"></button></td></tr>
+                <tr><td style="padding: .2rem!important;"><button class="btn btn-img mediacontrol" id="toggle" onclick="toggle()" style="padding: .1rem .1rem!important;" disabled><img src="img/play.svg"></button></td></tr>
                 <tr><td style="padding: .2rem!important;"><button class="btn btn-img mediacontrol" id="stop" onclick="stop()" style="padding: .1rem .1rem!important;" disabled><img src="img/stop.svg"></button></td></tr>
                 <tr><td style="padding: .2rem!important;"><button class="btn btn-img mediacontrol" id="next" onclick="next()" style="padding: .1rem .1rem!important;" disabled><img src="img/next.svg"></button></td></tr>
                 <tr><td style="padding: .2rem!important; height: 13vw; width: 5vw; display: revert; margin-top: 5%;"><input type="range" min="0" max="100" value="50" class="slider" id="volumeRange" disabled></td></tr>

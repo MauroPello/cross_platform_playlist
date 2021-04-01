@@ -30,8 +30,16 @@ function next(){
             });
 
             yt_player.addEventListener("onStateChange", function(state){
-                if(state.data === 0){
-                    next();
+                switch(state.data){
+                    case 0:
+                        next();
+                        break;
+                    case 1:
+                        document.getElementById("toggle").children[0].src = "img/pause.svg";
+                        break;
+                    case 2:
+                        document.getElementById("toggle").children[0].src = "img/play.svg";
+                        break;
                 }
             });
         }
@@ -40,7 +48,7 @@ function next(){
             yt_player.playVideo();
             setTimeout(function(){ 
                 setVolume("yt", getVolumeFromCookie("yt"));
-            }, 1000);
+            }, 2000);
         }
 
         var yt_div = document.getElementById('youtube_player');
@@ -86,6 +94,14 @@ function next(){
                 }, 2000);
                 mediaControllerToggle(false);
                 
+                sc_player.bind(SC.Widget.Events.PLAY, function() {
+                    document.getElementById("toggle").children[0].src = "img/pause.svg";
+                });
+
+                sc_player.bind(SC.Widget.Events.PAUSE, function() {
+                    document.getElementById("toggle").children[0].src = "img/play.svg";
+                });
+
                 sc_player.bind(SC.Widget.Events.FINISH, function() {
                     next();
                 });
@@ -126,27 +142,32 @@ function onPlayerReady(){
     mediaControllerToggle(false);
 }
 
-function resume(){
+function toggle(){
+    icon = document.getElementById("toggle").children[0];
     if (songs.platforms[count] == "yt"){
-        yt_player.playVideo();
-    }
-    else if (songs.platforms[count] == "sp"){
-        // play
-    }
-    else if (songs.platforms[count] == "sc"){
-        sc_player.play();
-    }
-}
-
-function pause(){
-    if (songs.platforms[count] == "yt"){
-        yt_player.pauseVideo();
+        if (yt_player.getPlayerState() == 1){
+            yt_player.pauseVideo();
+            icon.src = "img/play.svg";
+        }
+        else{
+            yt_player.playVideo();
+            icon.src = "img/pause.svg";
+        }
     }
     else if (songs.platforms[count] == "sp"){
         // pause
     }
     else if (songs.platforms[count] == "sc"){
-        sc_player.pause();
+        sc_player.isPaused(function(paused) {
+            if (paused){
+                sc_player.play();
+                icon.src = "img/pause.svg";
+            }
+            else{
+                sc_player.pause();
+                icon.src = "img/play.svg";
+            }
+        });
     }
 }
 
@@ -193,8 +214,7 @@ function getVolumeFromCookie(platform){
 
 function mediaControllerToggle(value){
     setTimeout(function(){ 
-        document.getElementById("resume").disabled = value;
-        document.getElementById("pause").disabled = value;
+        document.getElementById("toggle").disabled = value;
         document.getElementById("stop").disabled = value;
         document.getElementById("volumeRange").disabled = value;
         document.getElementById("next").disabled = value;
