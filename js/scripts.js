@@ -138,7 +138,7 @@ function onPlayerReady(){
     yt_player.playVideo();
     setTimeout(function(){ 
         setVolume("yt", getVolumeFromCookie("yt"));
-    }, 1000);
+    }, 2000);
     mediaControllerToggle(false);
 }
 
