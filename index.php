@@ -40,15 +40,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["rearrange_songs"]) && 
 <?php 
 if (!isset($_SESSION["username"])) {
     if ($_SERVER["REQUEST_METHOD"] == "GET"){
-        login_form();
+        if (isset($_COOKIE["user"])){
+            $username = explode("*|*", $_COOKIE["user"])[0];
+            $password = explode("*|*", $_COOKIE["user"])[1];
+            if (check_username($username)) {
+                if (check_password($username, $password)) {
+                    $_SESSION['username'] = $username;
+                }
+                else {
+                    alert("Wrong Password!");
+                    login_form();
+                }
+            }
+            else {
+                alert($username . " doesn't exist!");
+                login_form();
+            }
+        }else{
+            login_form();
+        }
     }
     else if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["button"])){
         $username = clean_input($_POST["username"]);
         $password = clean_input($_POST["password"]);
+        $remember = "No";
+        if (isset($_POST["remember"]))
+            $remember = clean_input($_POST["remember"]);
         if ($_POST['button'] == "Login"){
             if (check_username($username)) {
                 if (check_password($username, $password)) {
                     $_SESSION['username'] = $username;
+                    if ($remember == "Yes"){
+                        setcookie("user", $username . "*|*" . password_hash($password, PASSWORD_DEFAULT), 2147483647);
+                    }
                 }
                 else {
                     alert("Wrong Password!");
@@ -68,6 +92,9 @@ if (!isset($_SESSION["username"])) {
             else {
                 $_SESSION['username'] = $username;
                 new_user($username, password_hash($password, PASSWORD_DEFAULT));
+                if ($remember == "Yes"){
+                    setcookie("user", $username . "*|*" . password_hash($password, PASSWORD_DEFAULT), 2147483647);
+                }
             }
         }
     }
@@ -76,6 +103,7 @@ if (!isset($_SESSION["username"])) {
 if (isset($_POST["button"]) && $_POST["button"] == "Log_Out"){
     session_unset();
     session_destroy();
+    setcookie('user', null, -1);
 
     header('Refresh: 0; url=index.php');
 }

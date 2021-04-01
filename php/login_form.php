@@ -9,7 +9,13 @@
 
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
-
+        
+        <div class="checkbox mb-3">
+            <label>
+            <input type="checkbox" name="remember" value="Yes"> Remember me
+            </label>
+        </div>
+        
         <button type="submit" name="button" value="Login" class="btn btn-lg btn-dark btn-block">Sign In</button>
         <button type="submit" name="button" value="Register" class="btn btn-lg btn-dark btn-block">Register</button>
         <p class="mt-5 mb-3 text-muted text-center">All Around Playlist by Mauro Pellonara &copy;2021-2022</p>
