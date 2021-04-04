@@ -41,8 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["rearrange_songs"]) && 
 if (!isset($_SESSION["username"])) {
     if ($_SERVER["REQUEST_METHOD"] == "GET"){
         if (isset($_COOKIE["user"])){
-            $username = explode("*|*", $_COOKIE["user"])[0];
-            $password = explode("*|*", $_COOKIE["user"])[1];
+            $user = json_decode($_COOKIE["user"], true);
+            $username = clean_input($user["username"]);
+            $password = decrypt(clean_input($user["password"]));
             if (check_username($username)) {
                 if (check_password($username, $password)) {
                     $_SESSION['username'] = $username;
@@ -71,7 +72,9 @@ if (!isset($_SESSION["username"])) {
                 if (check_password($username, $password)) {
                     $_SESSION['username'] = $username;
                     if ($remember == "Yes"){
-                        setcookie("user", $username . "*|*" . password_hash($password, PASSWORD_DEFAULT), 2147483647);
+                        $user["username"] = $username;
+                        $user["password"] = encrypt($password);
+                        setcookie("user", json_encode($user), 2147483647);
                     }
                 }
                 else {

@@ -283,4 +283,12 @@ function update_session_activity(){
         $_SESSION['CREATED'] = time();  // update creation time
     } 
 }
+
+function encrypt($plaintext){
+    return openssl_encrypt($plaintext, "AES-128-CTR", "PORCODIOMADONNACAGNALAIDA", 0, "69696969696969");
+}
+
+function decrypt($ciphertext){
+    return openssl_decrypt($ciphertext, "AES-128-CTR", "PORCODIOMADONNACAGNALAIDA", 0, "69696969696969");
+}
 ?>
