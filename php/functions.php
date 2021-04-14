@@ -285,10 +285,10 @@ function update_session_activity(){
 }
 
 function encrypt($plaintext){
-    return openssl_encrypt($plaintext, "AES-128-CTR", "PORCODIOMADONNACAGNALAIDA", 0, "69696969696969");
+    return openssl_encrypt($plaintext, "AES-128-CTR", "PORCODIOMADONNACAGNALAIDA", 0, "6969696969696969");
 }
 
 function decrypt($ciphertext){
-    return openssl_decrypt($ciphertext, "AES-128-CTR", "PORCODIOMADONNACAGNALAIDA", 0, "69696969696969");
+    return openssl_decrypt($ciphertext, "AES-128-CTR", "PORCODIOMADONNACAGNALAIDA", 0, "6969696969696969");
 }
 ?>
