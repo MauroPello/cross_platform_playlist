@@ -1,10 +1,11 @@
 <?php
+require "secrets.php";
+
 function get_songname($id, $platform){
     $name = "Name not Found";
     if ($platform == "yt"){
         $request_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=$id&key=";
-        $yt_keys = ["AIzaSyBaZ6kbZDxm2XQo7w10qXj_51qVAqGDLGQ", "AIzaSyDssmgRGF29D1ipsz-s_wispDJS0nRi2qM"];
-        foreach($yt_keys as $key){
+        foreach($GLOBALS["yt_keys"] as $key){
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -46,7 +47,7 @@ function get_songname($id, $platform){
         $name = $value['artists'][0]["name"] . " - " . $value['name'];
     }
     else if ($platform == "sc"){
-        $request_url = "https://api-widget.soundcloud.com/resolve?url=https://soundcloud.com/$id&format=json&client_id=TaTmd2ARXgnp20a7BQJwuZ8xGFbrYgz5";
+        $request_url = "https://api-widget.soundcloud.com/resolve?url=https://soundcloud.com/$id&format=json&client_id=" . $GLOBALS["sc_client_id"];
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -72,9 +73,9 @@ function get_new_spotify_token(){
     curl_setopt($ch, CURLOPT_URL, 'https://accounts.spotify.com/api/token');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=refresh_token&refresh_token=AQDAieTwvYzjkQGqCm21LyGYvHLQ2fLfhcDmz7cBA70cAoE9l6rsaqHjnt1yJlmlA0v9SJ0iojIPy72-w-Q4To-r-5OXoyPDkGLzxPuxI5nOnBs9VGavqx0UdYGFbUxhd00");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=refresh_token&refresh_token=" . $GLOBALS["sp_refresh_token"]);
     $headers = array();
-    $headers[] = 'Authorization: Basic NDk4ZDk5YzI0YjY3NGJhYmJmNzYwMzQzOGJiNjk2Y2Y6NWMxZGE5NjA2OWU0NGE2MGJkZGNkMWJhOGJiMmJkOTA=';
+    $headers[] = 'Authorization: Basic ' . $GLOBALS["sp_authorization_token"];
     $headers[] = 'Content-Type: application/x-www-form-urlencoded';
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     $response = curl_exec($ch);
@@ -88,8 +89,7 @@ function get_new_spotify_token(){
 function search_ytsong($name){
     $name = urlencode($name);
     $request_url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=$name&safeSearch=none&key=";
-    $yt_keys = ["AIzaSyBaZ6kbZDxm2XQo7w10qXj_51qVAqGDLGQ", "AIzaSyDssmgRGF29D1ipsz-s_wispDJS0nRi2qM"];
-    foreach($yt_keys as $key){
+    foreach($GLOBALS["yt_keys"] as $key){
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -110,10 +110,10 @@ function search_ytsong($name){
 }
 
 function is_playlist($url){
-    if (strpos($url, "https://www.youtube.com/playlist?list=") !== false){
+    if (strpos($url, "youtube.com/playlist") !== false){
         return TRUE;
     }
-    else if (strpos($url, "https://open.spotify.com/playlist/") !== false || strpos($url, "https://open.spotify.com/embed/playlist/") !== false || strpos($url, "spotify:playlist:") !== false){
+    else if (strpos($url, "open.spotify.com/playlist/") !== false || strpos($url, "open.spotify.com/embed/playlist/") !== false || strpos($url, "spotify:playlist:") !== false){
         return TRUE;
     }
     else if (strpos(get_id($url, get_platform($url)), "/sets/") !== false){
@@ -127,29 +127,35 @@ function get_song_ids($id, $platform){
     
     if ($platform == "yt"){
         $next_page = "";
-        while (TRUE){
-            $request_url = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&pageToken=$next_page&maxResults=50&playlistId=$id&key=AIzaSyBaZ6kbZDxm2XQo7w10qXj_51qVAqGDLGQ";
-            $ch = curl_init();
-    
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_URL, $request_url);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-            curl_setopt($ch, CURLOPT_VERBOSE, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            $response = curl_exec($ch);
+        // check this part please
+        do {
+            $request_url = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&pageToken=$next_page&maxResults=5&playlistId=$id&key=";
+            foreach($GLOBALS["yt_keys"] as $key){
+                $ch = curl_init();
         
-            curl_close($ch);
-            $data = json_decode($response);
-            $value = json_decode(json_encode($data), true);
-            foreach ($value['items'] as $item){
-                array_push($ids, $item['snippet']['resourceId']['videoId']);
-            }
-            if (!isset($value['nextPageToken'])){
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_URL, $request_url . $key);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                curl_setopt($ch, CURLOPT_VERBOSE, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $response = curl_exec($ch);
+            
+                curl_close($ch);
+                $data = json_decode($response);
+                $value = json_decode(json_encode($data), true);
+                if (isset($value['error'])){
+                    continue;
+                }
+                foreach ($value['items'] as $item){
+                    array_push($ids, $item['snippet']['resourceId']['videoId']);
+                }
+                if (isset($value['nextPageToken'])) {
+                    $next_page = $value['nextPageToken'];
+                }
                 break;
             }
-            $next_page = $value['nextPageToken'];
-        }
+        } while (isset($next_page) && $next_page !== "");
     }
     else if ($platform == "sp"){
         $request_url = "https://api.spotify.com/v1/playlists/$id/tracks";
@@ -176,7 +182,7 @@ function get_song_ids($id, $platform){
     }
     else if ($platform == "sc"){
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://api-widget.soundcloud.com/resolve?url=https://soundcloud.com/$id&client_id=TaTmd2ARXgnp20a7BQJwuZ8xGFbrYgz5");
+        curl_setopt($ch, CURLOPT_URL, "https://api-widget.soundcloud.com/resolve?url=https://soundcloud.com/$id&client_id=" . $GLOBALS["sc_client_id"]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         curl_close($ch);
@@ -190,7 +196,7 @@ function get_song_ids($id, $platform){
             else{
                 $ch = curl_init();
                 $track_id = $track['id'];
-                curl_setopt($ch, CURLOPT_URL, "https://api-widget.soundcloud.com/tracks/$track_id?client_id=TaTmd2ARXgnp20a7BQJwuZ8xGFbrYgz5");
+                curl_setopt($ch, CURLOPT_URL, "https://api-widget.soundcloud.com/tracks/$track_id?client_id=" . $GLOBALS["sc_client_id"]);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 $response = curl_exec($ch);
                 curl_close($ch);
@@ -205,13 +211,13 @@ function get_song_ids($id, $platform){
 }
 
 function get_platform($url){
-    if (strpos($url, "https://www.youtube.com/") !== false || strpos($url, "https://youtu.be/") !== false){
+    if (strpos($url, "youtube.com/") !== false || strpos($url, "youtu.be/") !== false){
         return "yt";
     }
-    else if (strpos($url, "https://open.spotify.com/") !== false || strpos($url, "spotify:") !== false){
+    else if (strpos($url, "open.spotify.com/") !== false || strpos($url, "spotify:") !== false){
         return "sp";
     }
-    else if (strpos($url, "https://soundcloud.com/") !== false){
+    else if (strpos($url, "soundcloud.com/") !== false){
         return "sc";
     }
 }
@@ -219,7 +225,9 @@ function get_platform($url){
 function get_id($url, $platform){
     if ($platform == "yt"){
         $url = str_replace("https://www.youtube.com/watch?v=", '', $url);
+        $url = str_replace("https://youtube.com/watch?v=", '', $url);
         $url = str_replace("https://www.youtube.com/playlist?list=", '', $url);
+        $url = str_replace("https://youtube.com/playlist?list=", '', $url);
         $url = str_replace("https://youtu.be/", '', $url);
         $url = explode("&", $url)[0];
     }
@@ -260,6 +268,18 @@ function alert($msg){
     echo '<div class="alert alert-danger alert-dismissible" style="z-index: 10000; margin-top: 1%; margin-left: 10%; margin-right: 10%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' . $msg . '</div>';
 }
 
+function console_log($data){
+    echo '<script>';
+    echo 'console.log(' . json_encode( $data ) . ')';
+    echo '</script>';
+}
+
+function popup($data){
+    echo '<script>';
+    echo 'alert(' . json_encode( $data ) . ')';
+    echo '</script>';
+}
+
 function clean_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -285,10 +305,10 @@ function update_session_activity(){
 }
 
 function encrypt($plaintext){
-    return openssl_encrypt($plaintext, "AES-128-CTR", "PORCODIOMADONNACAGNALAIDA", 0, "6969696969696969");
+    return openssl_encrypt($plaintext, "AES-128-CTR", $GLOBALS["KEY"], 0, $GLOBALS["IV"]);
 }
 
 function decrypt($ciphertext){
-    return openssl_decrypt($ciphertext, "AES-128-CTR", "PORCODIOMADONNACAGNALAIDA", 0, "6969696969696969");
+    return openssl_decrypt($ciphertext, "AES-128-CTR", $GLOBALS["KEY"], 0, $GLOBALS["IV"]);
 }
 ?>
