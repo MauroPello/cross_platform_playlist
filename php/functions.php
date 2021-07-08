@@ -127,9 +127,9 @@ function get_song_ids($id, $platform){
     
     if ($platform == "yt"){
         $next_page = "";
-        // check this part please
         do {
             $request_url = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&pageToken=$next_page&maxResults=5&playlistId=$id&key=";
+
             foreach($GLOBALS["yt_keys"] as $key){
                 $ch = curl_init();
         
@@ -152,6 +152,9 @@ function get_song_ids($id, $platform){
                 }
                 if (isset($value['nextPageToken'])) {
                     $next_page = $value['nextPageToken'];
+                }
+                else {
+                    $next_page = "";
                 }
                 break;
             }
